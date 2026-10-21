@@ -1,0 +1,581 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fungus 网页剧情数据 v1",
+  "description": "结构校验配合 Unity StoryValidator 完成资源引用 类型兼容 节点可达性和事件绑定验证 所有连线目标必须存在",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "id",
+    "title",
+    "entry",
+    "variables",
+    "nodes"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$",
+      "description": "稳定内部标识 改名只修改 title 新建使用新 id"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entry": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$",
+      "description": "开始卡片 id 必须属于 nodes"
+    },
+    "variables": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/variable"
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    }
+  },
+  "$defs": {
+    "variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "title",
+        "type",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": [
+            "Integer",
+            "Float",
+            "Boolean",
+            "String"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "description": "字符串保存 例如 0 0.5 true 中文文本"
+        }
+      }
+    },
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "target"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "type",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "next": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "actor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "catalog.actors 中的角色 id 空值表示旁白"
+        },
+        "portrait": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "所选角色 portraits 中的 GUID 空值表示无表情"
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "voice": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "catalog.audio 中的音频 GUID 空值表示无配音"
+        },
+        "variable": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "本剧情 variables 中的 key"
+        },
+        "operation": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "assign 适用所有变量 add/subtract 仅适用 Integer/Float"
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "参数统一使用字符串 Integer 为 Int32 Float 为有限单精度 Boolean 只允许 true 或 false None 使用空字符串"
+        },
+        "comparison": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "eq/neq 适用所有变量 gt/gte/lt/lte 仅适用 Integer/Float"
+        },
+        "onTrue": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "onFalse": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "eventId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "eventMode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "signal 创建事件 SO 无需模板登记 binding 调用 catalog.events 中已绑定事件 省略时为 binding"
+        },
+        "eventTitle": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "eventValueKind": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "audio": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "catalog.audio 中的音频 GUID"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": [
+            "say",
+            "choice",
+            "condition",
+            "set",
+            "wait",
+            "event",
+            "sound",
+            "end"
+          ]
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 3600,
+          "default": 1
+        },
+        "volume": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 1
+        },
+        "wait": {
+          "type": "boolean",
+          "default": true
+        },
+        "options": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "text",
+              "target"
+            ],
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "target": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+              }
+            }
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/say"
+        },
+        {
+          "$ref": "#/$defs/choice"
+        },
+        {
+          "$ref": "#/$defs/condition"
+        },
+        {
+          "$ref": "#/$defs/set"
+        },
+        {
+          "$ref": "#/$defs/wait"
+        },
+        {
+          "$ref": "#/$defs/event"
+        },
+        {
+          "$ref": "#/$defs/sound"
+        },
+        {
+          "$ref": "#/$defs/end"
+        }
+      ]
+    },
+    "say": {
+      "title": "对白卡片",
+      "type": "object",
+      "required": [
+        "type",
+        "next",
+        "text"
+      ],
+      "properties": {
+        "type": {
+          "const": "say"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "next": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        }
+      }
+    },
+    "choice": {
+      "title": "玩家选择卡片",
+      "type": "object",
+      "required": [
+        "type",
+        "options"
+      ],
+      "properties": {
+        "type": {
+          "const": "choice"
+        },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "description": "上限为 capabilities.catalog.maxOptions",
+          "items": {
+            "$ref": "#/$defs/option"
+          }
+        }
+      }
+    },
+    "condition": {
+      "title": "条件分支卡片",
+      "type": "object",
+      "required": [
+        "type",
+        "variable",
+        "value",
+        "onTrue",
+        "onFalse"
+      ],
+      "properties": {
+        "type": {
+          "const": "condition"
+        },
+        "variable": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        },
+        "value": {
+          "type": "string"
+        },
+        "comparison": {
+          "enum": [
+            "eq",
+            "neq",
+            "gt",
+            "gte",
+            "lt",
+            "lte"
+          ],
+          "default": "eq"
+        },
+        "onTrue": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        },
+        "onFalse": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        }
+      }
+    },
+    "set": {
+      "title": "修改变量卡片",
+      "type": "object",
+      "required": [
+        "type",
+        "next",
+        "variable",
+        "value"
+      ],
+      "properties": {
+        "type": {
+          "const": "set"
+        },
+        "variable": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        },
+        "value": {
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "assign",
+            "add",
+            "subtract"
+          ],
+          "default": "assign"
+        },
+        "next": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        }
+      }
+    },
+    "wait": {
+      "title": "等待卡片",
+      "type": "object",
+      "required": [
+        "type",
+        "next"
+      ],
+      "properties": {
+        "type": {
+          "const": "wait"
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 3600,
+          "default": 1
+        },
+        "next": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        }
+      }
+    },
+    "event": {
+      "title": "游戏事件卡片",
+      "type": "object",
+      "required": [
+        "type",
+        "next",
+        "eventId"
+      ],
+      "properties": {
+        "type": {
+          "const": "event"
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eventMode": {
+          "enum": [
+            "signal",
+            "binding"
+          ],
+          "default": "binding"
+        },
+        "next": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "eventMode"
+            ],
+            "properties": {
+              "eventMode": {
+                "const": "signal"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "eventTitle",
+              "eventValueKind"
+            ],
+            "properties": {
+              "eventId": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+              },
+              "eventTitle": {
+                "type": "string",
+                "minLength": 1
+              },
+              "eventValueKind": {
+                "enum": [
+                  "None",
+                  "String",
+                  "Integer",
+                  "Float",
+                  "Boolean"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "sound": {
+      "title": "播放音效卡片",
+      "type": "object",
+      "required": [
+        "type",
+        "next",
+        "audio"
+      ],
+      "properties": {
+        "type": {
+          "const": "sound"
+        },
+        "audio": {
+          "type": "string",
+          "minLength": 1
+        },
+        "next": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+        }
+      }
+    },
+    "end": {
+      "title": "剧情结束卡片",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "const": "end"
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "version": 1,
+      "id": "new_story",
+      "title": "新的剧情",
+      "entry": "greeting",
+      "variables": [],
+      "nodes": [
+        {
+          "id": "greeting",
+          "title": "开场对白",
+          "type": "say",
+          "x": 80,
+          "y": 80,
+          "text": "你好",
+          "next": "finish"
+        },
+        {
+          "id": "finish",
+          "title": "结束",
+          "type": "end",
+          "x": 440,
+          "y": 80
+        }
+      ]
+    }
+  ]
+}

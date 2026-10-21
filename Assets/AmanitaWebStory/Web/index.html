@@ -1,0 +1,3901 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>苔间 · 剧情工作台</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #101318;
+        --panel: #171c24;
+        --card: #202733;
+        --line: #344050;
+        --text: #e8edf5;
+        --muted: #a3adbd;
+        --mint: #8ab4ff;
+        --blue: #9ec7ff;
+        --gold: #edc078;
+        --danger: #ff9b9b;
+        --button: #242d3a;
+        --hover: #303d50;
+        --field: #111720;
+        --selected: #243a5a;
+        --accent-text: #101e34;
+        --grid: #313a48;
+        --wire: #8295af;
+        --node-border: #495970;
+        --help: #1c2a40;
+        --backdrop: #080d18bb;
+        --toast: #dce8ff;
+        --toast-text: #123568;
+        --tone-say: #8ccfae;
+        --tone-choice: #edc078;
+        --tone-condition: #bcadf5;
+        --tone-set: #d9d17d;
+        --tone-wait: #8cbde4;
+        --tone-event: #efa8bc;
+        --tone-sound: #9fc9ee;
+        --tone-end: #abb6c6;
+        font:
+          14px/1.6 "Segoe UI",
+          "Microsoft YaHei",
+          sans-serif;
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
+        --bg: #f0f3f8;
+        --panel: #ffffff;
+        --card: #ffffff;
+        --line: #d3dce8;
+        --text: #1e293b;
+        --muted: #5b6a80;
+        --mint: #245fc9;
+        --blue: #2464b6;
+        --gold: #925c10;
+        --danger: #b62f42;
+        --button: #edf2f9;
+        --hover: #dfe9f8;
+        --field: #f8fafd;
+        --selected: #e7efff;
+        --accent-text: #ffffff;
+        --grid: #cbd5e4;
+        --wire: #8a9db7;
+        --node-border: #bac8db;
+        --help: #edf3fd;
+        --backdrop: #1b2e4c55;
+        --toast: #163b75;
+        --toast-text: #ffffff;
+        --tone-say: #22664b;
+        --tone-choice: #84540c;
+        --tone-condition: #7150b5;
+        --tone-set: #6c650d;
+        --tone-wait: #216894;
+        --tone-event: #a43f64;
+        --tone-sound: #216894;
+        --tone-end: #56657a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+      }
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: var(--button);
+        padding: 7px 12px;
+        white-space: nowrap;
+      }
+      button:hover {
+        background: var(--hover);
+        border-color: var(--mint);
+      }
+      button:focus-visible,
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: 2px solid var(--mint);
+        outline-offset: 2px;
+      }
+      button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      button.primary {
+        background: var(--mint);
+        color: var(--accent-text);
+        border-color: var(--mint);
+        font-weight: 650;
+      }
+      button.ghost {
+        background: transparent;
+      }
+      button.danger {
+        color: var(--danger);
+      }
+      input,
+      textarea,
+      select {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--field);
+        padding: 8px 10px;
+      }
+      input[type="checkbox"] {
+        width: auto;
+        accent-color: var(--mint);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+      label {
+        display: block;
+        margin: 14px 0 5px;
+        color: var(--text);
+        font-size: 12px;
+      }
+      small,
+      .hint {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .hint {
+        margin: 7px 0 12px;
+        line-height: 1.8;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .row > * {
+        min-width: 0;
+      }
+      .grow {
+        flex: 1;
+      }
+      .badge {
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 3px 9px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .badge.live {
+        color: var(--mint);
+        border-color: var(--line);
+      }
+      .divider {
+        border: 0;
+        border-top: 1px solid var(--line);
+        margin: 18px 0;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+      h2 {
+        font-size: 21px;
+      }
+      h3 {
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+      header {
+        height: 76px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        padding: 0 22px;
+        gap: 16px;
+        background: var(--panel);
+      }
+      .brandmark {
+        color: var(--mint);
+        font-size: 28px;
+      }
+      .brand {
+        letter-spacing: 3px;
+        font-weight: 600;
+        font-size: 18px;
+      }
+      .subbrand {
+        color: var(--muted);
+        font-size: 10px;
+        letter-spacing: 2px;
+      }
+      .toolbar {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .shell {
+        display: grid;
+        grid-template-columns:
+          var(--left-width, 218px) 8px minmax(280px, 1fr)
+          8px var(--right-width, 310px);
+        min-width: 716px;
+        height: calc(100vh - 110px);
+      }
+      .panel-divider {
+        cursor: col-resize;
+        touch-action: none;
+        background: var(--panel);
+        position: relative;
+      }
+      .panel-divider::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 3px;
+        width: 2px;
+        background: var(--line);
+      }
+      .panel-divider:hover::after,
+      .panel-divider:focus-visible::after,
+      .panel-divider.dragging::after {
+        background: var(--mint);
+      }
+      body.resizing {
+        cursor: col-resize;
+        user-select: none;
+      }
+      body.resizing .canvasbar {
+        pointer-events: none;
+      }
+      aside {
+        overflow: auto;
+        background: var(--panel);
+        padding: 18px;
+      }
+      .left {
+        border-right: 1px solid var(--line);
+      }
+      .inspector {
+        border-left: 1px solid var(--line);
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: var(--mint);
+        margin-bottom: 8px;
+      }
+      .story-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .story-heading button {
+        flex: 0 0 auto;
+        padding: 4px 8px;
+      }
+      .title-input {
+        min-width: 0;
+        flex: 1;
+        font-size: 17px;
+        font-weight: 600;
+        border: none;
+        background: transparent;
+        padding: 0;
+      }
+      .title-input[readonly] {
+        cursor: text;
+      }
+      .title-input:not([readonly]) {
+        background: var(--panel);
+        outline: 2px solid var(--mint);
+      }
+      .add-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+        margin: 10px 0;
+      }
+      .add-grid button {
+        padding: 8px 4px;
+        text-align: left;
+        font-size: 12px;
+      }
+      .node-icon {
+        margin-right: 6px;
+        color: var(--mint);
+      }
+      .outline-item {
+        display: flex;
+        gap: 9px;
+        align-items: center;
+        border-radius: 6px;
+        padding: 8px 6px;
+        cursor: pointer;
+        font-size: 12px;
+        color: var(--muted);
+        margin: 2px 0;
+      }
+      .outline-item.selected {
+        background: var(--selected);
+        color: var(--mint);
+      }
+      .outline-item span:last-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .outline-item {
+        gap: 6px;
+        min-height: 32px;
+      }
+      .outline-item:focus-visible {
+        outline: 1px solid var(--mint);
+      }
+      .outline-fold {
+        flex: 0 0 30px;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        font-size: 23px;
+        color: var(--text);
+      }
+      .outline-label {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .outline-copy {
+        flex: 1;
+        min-width: 0;
+      }
+      .count {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .workspace {
+        position: relative;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      .canvasbar {
+        position: absolute;
+        z-index: 3;
+        top: 16px;
+        left: 18px;
+        right: 18px;
+        display: flex;
+        gap: 7px;
+        align-items: center;
+        pointer-events: none;
+        flex-wrap: wrap;
+      }
+      .canvasbar > * {
+        pointer-events: auto;
+      }
+      .canvasbar .badge {
+        background: var(--panel);
+      }
+      .canvas-scroll {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-image: radial-gradient(var(--grid) 1px, transparent 1px);
+        background-size: 22px 22px;
+      }
+      .stage-space {
+        width: 3200px;
+        height: 2400px;
+      }
+      .stage {
+        width: 3200px;
+        height: 2400px;
+        position: relative;
+        transform-origin: 0 0;
+      }
+      svg.wires {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        pointer-events: none;
+      }
+      .wire {
+        fill: none;
+        stroke: var(--wire);
+        stroke-width: 2;
+        opacity: 0.75;
+      }
+      .wire.active {
+        stroke: var(--mint);
+        stroke-width: 3;
+      }
+      .wire.selected,
+      .wire-group:focus-visible .wire {
+        stroke: var(--gold);
+        stroke-width: 4;
+        opacity: 1;
+      }
+      .wire-group {
+        outline: none;
+      }
+      .wire-hit {
+        fill: none;
+        stroke: transparent;
+        stroke-width: 18;
+        pointer-events: stroke;
+        cursor: pointer;
+      }
+      .wire {
+        pointer-events: none;
+      }
+      .wire-preview {
+        fill: none;
+        stroke: var(--mint);
+        stroke-width: 3;
+        stroke-dasharray: 7 5;
+        pointer-events: none;
+      }
+      .stage {
+        touch-action: none;
+      }
+      .port.drop-ready {
+        background: var(--mint);
+        box-shadow: 0 0 0 5px var(--selected);
+      }
+      .node {
+        position: absolute;
+        width: 218px;
+        background: var(--card);
+        border: 1px solid var(--node-border);
+        border-radius: 10px;
+        box-shadow: 0 8px 30px #0003;
+        cursor: grab;
+        user-select: none;
+      }
+      .node.selected {
+        border-color: var(--mint);
+        box-shadow:
+          0 0 0 1px var(--mint),
+          0 10px 35px #0005;
+      }
+      .node-top {
+        padding: 9px 14px;
+        border-bottom: 1px solid var(--line);
+        font-size: 10px;
+        color: var(--node-color, var(--mint));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .node-body {
+        padding: 10px 14px 12px;
+      }
+      .node-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+      .node-preview {
+        font-size: 11px;
+        color: var(--muted);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        white-space: pre-wrap;
+        word-break: break-word;
+        min-height: 19px;
+      }
+      .port {
+        width: 12px;
+        height: 12px;
+        border: 2px solid var(--node-color, var(--mint));
+        background: var(--card);
+        border-radius: 50%;
+        padding: 0;
+        position: absolute;
+        z-index: 2;
+        cursor: crosshair;
+      }
+      .port.in {
+        left: -7px;
+        top: 21px;
+      }
+      .outputs {
+        padding: 0 14px 8px;
+      }
+      .output {
+        height: 24px;
+        position: relative;
+        font-size: 10px;
+        color: var(--muted);
+        text-align: right;
+        padding-right: 3px;
+      }
+      .output .port {
+        right: -21px;
+        top: 5px;
+      }
+      .port.linking {
+        background: var(--mint);
+        box-shadow: 0 0 12px var(--mint);
+      }
+      .canvas-note {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        color: var(--muted);
+        font-size: 11px;
+        pointer-events: none;
+      }
+      .canvas-note span {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 7px 13px;
+        border-radius: 20px;
+      }
+      footer {
+        height: 34px;
+        border-top: 1px solid var(--line);
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        padding: 0 18px;
+        font-size: 11px;
+        color: var(--muted);
+        background: var(--panel);
+      }
+      #status {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #sync-state {
+        margin-left: auto;
+        color: var(--mint);
+        white-space: nowrap;
+      }
+      .field-group {
+        padding: 0 0 12px;
+      }
+      .help-card {
+        border: 1px solid var(--line);
+        background: var(--help);
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        color: var(--text);
+        line-height: 1.9;
+      }
+      .section-title {
+        font-size: 12px;
+        letter-spacing: 1px;
+        margin: 22px 0 10px;
+        color: var(--muted);
+      }
+      .option-editor {
+        padding: 10px;
+        background: var(--field);
+        border-radius: 7px;
+        margin-top: 10px;
+      }
+      .option-editor label {
+        margin-top: 6px;
+      }
+      .entry-tag {
+        color: var(--gold);
+        font-size: 10px;
+      }
+      .empty {
+        color: var(--muted);
+        padding: 25px 0;
+      }
+      .danger-text {
+        color: var(--danger);
+      }
+      dialog {
+        background: var(--panel);
+        color: var(--text);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 26px;
+        width: min(820px, 92vw);
+        max-height: 88vh;
+        overflow: auto;
+        box-shadow: 0 25px 100px #0007;
+      }
+      dialog::backdrop {
+        background: var(--backdrop);
+        backdrop-filter: blur(5px);
+      }
+      .modal-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .modal-head h2 {
+        margin: 0;
+      }
+      .modal-footer {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        justify-content: flex-end;
+        margin-top: 18px;
+      }
+      .code {
+        font:
+          12px/1.6 Consolas,
+          monospace;
+        min-height: 290px;
+        white-space: pre;
+      }
+      .variable-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 95px 1fr 36px;
+        gap: 7px;
+        margin: 10px 0;
+      }
+      .variable-grid input,
+      .variable-grid select {
+        padding: 7px;
+        font-size: 12px;
+      }
+      .preview-stage {
+        background:
+          radial-gradient(ellipse at 25% 0%, var(--selected), transparent 70%),
+          var(--field);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 30px;
+        min-height: 240px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      .preview-actor {
+        color: var(--mint);
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+      .preview-text {
+        font-size: 19px;
+        white-space: pre-wrap;
+        line-height: 1.8;
+      }
+      .preview-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 22px;
+      }
+      .preview-vars {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 15px 0;
+      }
+      .preview-log {
+        font-size: 12px;
+        max-height: 130px;
+        overflow: auto;
+        color: var(--muted);
+        white-space: pre-wrap;
+      }
+      .catalog-card {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        margin-top: 10px;
+      }
+      .catalog-card h3 {
+        color: var(--mint);
+      }
+      #toast {
+        position: fixed;
+        bottom: 52px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 20;
+        background: var(--toast);
+        color: var(--toast-text);
+        padding: 11px 22px;
+        border-radius: 9px;
+        max-width: 80vw;
+        box-shadow: 0 8px 40px #0008;
+        display: none;
+      }
+      #toast.error {
+        background: #f3c2bd;
+        color: #4b221e;
+      }
+      .mobile-note {
+        display: none;
+      }
+      .preview-label {
+        font-size: 10px;
+        color: var(--gold);
+        letter-spacing: 1px;
+        margin-bottom: 15px;
+      }
+      #issues {
+        padding: 12px;
+        background: var(--field);
+        border-radius: 7px;
+        white-space: pre-wrap;
+        font-size: 12px;
+        max-height: 220px;
+        overflow: auto;
+      }
+      .check-ok {
+        color: var(--mint);
+      }
+      .check-bad {
+        color: var(--danger);
+      }
+      @media (max-width: 1080px) {
+        .toolbar {
+          gap: 4px;
+        }
+        .toolbar button {
+          padding: 6px 8px;
+          font-size: 12px;
+        }
+        header {
+          padding: 0 12px;
+          gap: 9px;
+        }
+        .subbrand {
+          display: none;
+        }
+        .brand {
+          font-size: 15px;
+        }
+        aside {
+          padding: 13px;
+        }
+        .badge {
+          font-size: 10px;
+        }
+      }
+      @media (max-width: 760px) {
+        .shell {
+          overflow: auto;
+        }
+        .toolbar button.secondary {
+          display: none;
+        }
+        header .brandmark {
+          display: none;
+        }
+        header {
+          min-width: 716px;
+        }
+        footer {
+          min-width: 716px;
+        }
+        .shell {
+          min-width: 716px;
+        }
+      }
+      .story-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 9px;
+      }
+      .story-actions button {
+        padding: 8px 6px;
+      }
+      .story-picker {
+        position: relative;
+      }
+      .story-picker-field {
+        display: flex;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: var(--field);
+      }
+      .story-picker-field:focus-within {
+        outline: 2px solid var(--mint);
+      }
+      #story-choice-name {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        background: transparent;
+        font-size: 12px;
+      }
+      #story-picker-toggle {
+        padding: 6px 10px;
+        border: 0;
+        background: transparent;
+      }
+      #story-picker-list {
+        position: absolute;
+        z-index: 30;
+        top: calc(100% + 5px);
+        left: 0;
+        right: 0;
+        max-height: 340px;
+        overflow-y: auto;
+        padding: 6px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        box-shadow: 0 10px 24px #0005;
+      }
+      .story-picker-group {
+        padding: 7px 5px 3px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .story-picker-option {
+        display: block;
+        width: 100%;
+        border: 0;
+        border-radius: 4px;
+        background: transparent;
+        padding: 8px;
+        text-align: left;
+        overflow-wrap: anywhere;
+      }
+      .story-picker-option[aria-selected="true"] {
+        background: var(--selected);
+      }
+      #modal.preview-modal {
+        width: min(1080px, 94vw);
+      }
+      .preview-toolbar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .preview-toolbar select {
+        width: auto;
+      }
+      .preview-toolbar label {
+        margin: 0;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .preview-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 230px;
+        gap: 16px;
+      }
+      .preview-data {
+        padding: 14px;
+        background: var(--field);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+      }
+      .preview-data label {
+        margin-top: 8px;
+      }
+      .preview-data .preview-log {
+        max-height: 210px;
+      }
+      .preview-stage {
+        min-height: 350px;
+        justify-content: center;
+      }
+      .preview-title {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 24px;
+      }
+      .preview-text:focus {
+        outline: none;
+      }
+      .preview-variable {
+        margin-bottom: 8px;
+      }
+      .preview-variable input,
+      .preview-variable select {
+        padding: 5px 8px;
+      }
+      .preview-variable label {
+        font-size: 11px;
+      }
+      .preview-log {
+        max-height: 210px;
+      }
+      @media (max-width: 800px) {
+        .preview-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brandmark">✳</div>
+      <div>
+        <div class="brand">苔间 <span class="muted">/</span> 剧情工作台</div>
+        <div class="subbrand">AMANITA STORY WORKSPACE</div>
+      </div>
+      <span class="badge" id="connection">离线草稿</span>
+      <div class="toolbar">
+        <button class="ghost" id="theme-toggle" aria-label="切换黑夜白天配色">
+          白天模式</button
+        ><button class="ghost secondary" id="ai">AI 辅助</button
+        ><button class="ghost" id="file-import">导入 JSON</button
+        ><button class="ghost" id="export">导出</button
+        ><button id="validate">检查</button
+        ><button class="primary" id="push">回填 Unity ↗</button>
+      </div>
+    </header>
+    <main class="shell">
+      <aside class="left">
+        <div class="eyebrow">STORY / 当前剧情</div>
+        <div class="story-heading">
+          <input
+            id="story-title"
+            class="title-input"
+            aria-label="剧情标题"
+            title="双击修改当前剧情名称"
+            readonly
+          />
+          <button
+            id="rename-story"
+            class="ghost"
+            title="修改当前正在编辑的剧情名称"
+          >
+            改名
+          </button>
+        </div>
+        <h3>剧情管理</h3>
+        <select
+          id="unity-stories"
+          hidden
+          aria-hidden="true"
+          tabindex="-1"
+        ></select>
+        <div class="story-picker" id="story-picker">
+          <div class="story-picker-field">
+            <input
+              id="story-choice-name"
+              aria-label="所选剧情名称"
+              title="双击修改所选本地剧情名称"
+              readonly
+            />
+            <button
+              id="story-picker-toggle"
+              aria-label="展开剧情列表"
+              aria-controls="story-picker-list"
+              aria-expanded="false"
+            >
+              ▾
+            </button>
+          </div>
+          <div
+            id="story-picker-list"
+            role="listbox"
+            aria-label="选择剧情段"
+            hidden
+          ></div>
+        </div>
+        <div class="story-actions">
+          <button id="new-story">新建</button><button id="pull">读取</button>
+          <button id="copy-story" title="复制当前剧情为新的剧情段">复制</button>
+          <button id="delete-story" class="danger" title="删除下拉框选中的剧情">
+            删除
+          </button>
+        </div>
+        <hr class="divider" />
+        <div class="row">
+          <h3 class="grow">添加剧情卡片</h3>
+          <span class="count" id="node-count"></span>
+        </div>
+        <div class="add-grid" id="node-tools"></div>
+        <button class="ghost" id="variables" style="width: 100%">
+          ◈ 编辑剧情变量
+        </button>
+        <div class="section-title">卡片索引</div>
+        <div id="outline" role="tree" aria-label="剧情卡片树"></div>
+      </aside>
+      <div
+        class="panel-divider"
+        id="left-divider"
+        role="separator"
+        aria-label="调整左栏宽度"
+        aria-orientation="vertical"
+        tabindex="0"
+        title="拖动调整左栏宽度 双击恢复默认"
+      ></div>
+      <section class="workspace">
+        <div class="canvasbar">
+          <span class="badge" id="graph-title"></span><span class="grow"></span
+          ><button id="undo" title="撤销 Ctrl+Z">↶</button
+          ><button id="redo" title="重做 Ctrl+Y">↷</button
+          ><button id="zoom-out" aria-label="缩小画布">−</button
+          ><span class="badge" id="zoom-label">100%</span
+          ><button id="zoom-in" aria-label="放大画布">＋</button
+          ><button id="fit">定位开始</button
+          ><button id="preview">▶ 试读</button>
+        </div>
+        <div class="canvas-scroll" id="viewport">
+          <div class="stage-space" id="stage-space">
+            <div class="stage" id="stage" tabindex="-1">
+              <svg class="wires" id="wires" aria-label="剧情连接线"></svg>
+              <div id="nodes"></div>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-note">
+          <span id="canvas-tip"
+            >拖圆点连线 · Ctrl+C / V / X 复制、粘贴、剪切卡片 · Del
+            删除卡片或断开连线</span
+          >
+        </div>
+      </section>
+      <div
+        class="panel-divider"
+        id="right-divider"
+        role="separator"
+        aria-label="调整右栏宽度"
+        aria-orientation="vertical"
+        tabindex="0"
+        title="拖动调整右栏宽度 双击恢复默认"
+      ></div>
+      <aside class="inspector" id="inspector"></aside>
+    </main>
+    <footer>
+      <span>●</span><span id="status">正在准备工作台…</span
+      ><span id="sync-state">本地草稿</span>
+    </footer>
+    <div id="toast" role="status"></div>
+    <dialog id="modal">
+      <div class="modal-head">
+        <h2 id="modal-title"></h2>
+        <button class="ghost" id="modal-close" aria-label="关闭窗口">✕</button>
+      </div>
+      <div id="modal-body"></div>
+    </dialog>
+    <input type="file" id="json-file" accept=".json,application/json" hidden />
+    <script>
+      "use strict";
+      const $ = (id) => document.getElementById(id),
+        esc = (value) =>
+          String(value ?? "").replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[c],
+          );
+      const kinds = {
+        say: {
+          title: "对白",
+          icon: "▤",
+          color: "var(--tone-say)",
+          help: "角色说一句话，玩家点击继续。可选表情头像和配音。",
+        },
+        choice: {
+          title: "玩家选择",
+          icon: "⑂",
+          color: "var(--tone-choice)",
+          help: "为玩家提供选项，每个选项连接一条后续剧情。",
+        },
+        condition: {
+          title: "条件分支",
+          icon: "◇",
+          color: "var(--tone-condition)",
+          help: "检查一个剧情变量，根据是否满足条件选择路线。",
+        },
+        set: {
+          title: "修改变量",
+          icon: "◈",
+          color: "var(--tone-set)",
+          help: "改变信任值、线索开关等剧情数据。它不会自动修改背包或任务。",
+        },
+        wait: {
+          title: "等待",
+          icon: "◷",
+          color: "var(--tone-wait)",
+          help: "等待指定秒数后继续。Unity 中按游戏时间计时。",
+        },
+        event: {
+          title: "事件",
+          icon: "⚑",
+          color: "var(--tone-event)",
+          help: "填写固定格式的事件，回填自动生成事件 SO。也可调用已有 Unity 能力。",
+        },
+        sound: {
+          title: "播放音效",
+          icon: "♫",
+          color: "var(--tone-sound)",
+          help: "播放项目中的音频，可等待播放结束后继续。",
+        },
+        end: {
+          title: "结束",
+          icon: "■",
+          color: "var(--tone-end)",
+          help: "停止这条剧情路线。",
+        },
+      };
+      const typeTitles = {
+        Integer: "整数",
+        Float: "小数",
+        Boolean: "开关",
+        String: "文字",
+        None: "无需参数",
+      };
+      const demo = {
+        version: 1,
+        id: "new_story",
+        title: "新的剧情",
+        entry: "arrival",
+        variables: [],
+        nodes: [
+          { id: "arrival", title: "开始剧情", type: "say", x: 90, y: 130, actor: "", text: "在这里填写对白。", next: "finish" },
+          { id: "finish", title: "剧情结束", type: "end", x: 430, y: 130 }
+        ]
+      };
+      const offlineCatalog = { maxOptions: 6, actors: [], events: [], audio: [], stories: [] };
+      const draftSlot =
+        new URLSearchParams(location.hash.slice(1)).get("draft") || "";
+      const draftKey =
+          "amanita.webstory.draft.v1" + (draftSlot ? "." + draftSlot : ""),
+        clone = (value) => JSON.parse(JSON.stringify(value));
+      let catalog = clone(offlineCatalog),
+        doc = clone(demo),
+        revision = "",
+        selected = "arrival",
+        zoom = 1,
+        connected = false,
+        linking = null,
+        drag = null,
+        resizeState = null,
+        selectedWire = null,
+        graphSelectionActive = false,
+        outlineRows = [],
+        history = [],
+        future = [],
+        historyTimer = 0,
+        toastTimer = 0,
+        simulation = null,
+        dirty = true,
+        writing = false;
+      const knownRevisions = new Map();
+      const revisionKey = (id, slot = storyLibrary.active) => slot + ":" + id;
+      const libraryKey =
+        "amanita.webstory.library.v1" + (draftSlot ? "." + draftSlot : "");
+      let storyLibrary = { active: "", items: [] };
+      const layoutKey = "amanita.webstory.layout.v1";
+      const panelLimits = {
+        left: { min: 180, max: 500, initial: 218 },
+        right: { min: 240, max: 560, initial: 310 },
+      };
+      let uiPreferences = { leftWidth: 218, rightWidth: 310, collapsed: {} };
+      const defaultCanvasTip =
+        "拖圆点连线 · Ctrl+C / V / X 复制、粘贴、剪切卡片 · Del 删除卡片或断开连线";
+
+      const params = new URLSearchParams(location.hash.slice(1)),
+        token = params.get("token") || "";
+      function message(text, error = false) {
+        $("toast").textContent = text;
+        $("toast").className = error ? "error" : "";
+        $("toast").style.display = "block";
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(
+          () => ($("toast").style.display = "none"),
+          6500,
+        );
+        $("status").textContent = text;
+      }
+      function snapshot() {
+        return JSON.stringify({ doc, revision, selected, dirty });
+      }
+      function saveDraft() {
+        if (!storyLibrary.active) storyLibrary.active = crypto.randomUUID();
+        const state = JSON.parse(snapshot());
+        const index = storyLibrary.items.findIndex(
+          (item) => item.slot === storyLibrary.active,
+        );
+        const item = { slot: storyLibrary.active, ...state };
+        if (index < 0) storyLibrary.items.push(item);
+        else storyLibrary.items[index] = item;
+        localStorage.setItem(libraryKey, JSON.stringify(storyLibrary));
+        localStorage.setItem(draftKey, snapshot());
+        refreshStoryOptions();
+      }
+      function activateStory(
+        state,
+        slot = crypto.randomUUID(),
+        preserveCurrent = true,
+      ) {
+        finishGestures();
+        finishStoryRename(false);
+        finishPickerRename(false);
+        closeStoryPicker();
+        if (preserveCurrent) saveDraft();
+        storyLibrary.active = slot;
+        doc = clone(state.doc);
+        revision = state.revision || "";
+        if (revision) knownRevisions.set(revisionKey(doc.id), revision);
+        selected = state.selected || doc.entry;
+        dirty = state.dirty !== false;
+        history = [];
+        future = [];
+        clearTimeout(historyTimer);
+        historyTimer = 0;
+        graphSelectionActive = false;
+        saveDraft();
+        render();
+        refreshHistory();
+        $("sync-state").textContent = dirty
+          ? "草稿已自动保存 · 待回填"
+          : "与 Unity 回填版本一致";
+        $("modal").close();
+        selectNode(selected, true, false);
+        $("unity-stories").value = "draft:" + storyLibrary.active;
+        refreshStoryPicker();
+        $("stage").focus({ preventScroll: true });
+      }
+      function refreshStoryOptions() {
+        const select = $("unity-stories");
+        const previous = select.value;
+        const groups = [
+          {
+            label: "本地剧情",
+            options: storyLibrary.items.map((item) => ({
+              value: "draft:" + item.slot,
+              label: `${item.doc.title} · 本地${item.slot === storyLibrary.active ? " · 当前" : ""}`,
+            })),
+          },
+          {
+            label: "Unity 已回填",
+            options: catalog.stories.map((item) => ({
+              value: "unity:" + item.id,
+              label: item.title + " · Unity",
+            })),
+          },
+          {
+            label: "本地回收站 · 读取可恢复",
+            options: (storyLibrary.trash || []).map((item) => ({
+              value: "trash:" + item.slot,
+              label: item.doc.title + " · 可恢复",
+            })),
+          },
+        ].filter((group) => group.options.length);
+        const currentGroups = [...select.children];
+        const sameStructure =
+          currentGroups.length === groups.length &&
+          groups.every((group, index) => {
+            const current = currentGroups[index];
+            return (
+              current.label === group.label &&
+              current.children.length === group.options.length &&
+              group.options.every(
+                (option, optionIndex) =>
+                  current.children[optionIndex].value === option.value,
+              )
+            );
+          });
+        if (!sameStructure) {
+          select.replaceChildren(
+            ...groups.map((group) => {
+              const element = document.createElement("optgroup");
+              element.label = group.label;
+              for (const option of group.options) {
+                const entry = document.createElement("option");
+                entry.value = option.value;
+                entry.textContent = option.label;
+                element.append(entry);
+              }
+              return element;
+            }),
+          );
+        } else {
+          groups
+            .flatMap((group) => group.options)
+            .forEach((option, index) => {
+              const entry = select.options[index];
+              if (entry.textContent !== option.label)
+                entry.textContent = option.label;
+            });
+        }
+        const next = [...select.options].some(
+          (option) => option.value === previous,
+        )
+          ? previous
+          : "draft:" + storyLibrary.active;
+        if (select.value !== next) select.value = next;
+        refreshStoryPicker();
+      }
+      function refreshStoryPicker() {
+        const select = $("unity-stories");
+        if ($("story-choice-name").readOnly)
+          $("story-choice-name").value =
+            select.selectedOptions[0]?.textContent || "";
+        if ($("story-picker-list").hidden) return;
+        $("story-picker-list").innerHTML = [...select.children]
+          .map(
+            (group) =>
+              `<div role="group" aria-label="${esc(group.label)}"><div class="story-picker-group">${esc(group.label)}</div>${[...group.children].map((option) => `<button class="story-picker-option" role="option" aria-selected="${option.value === select.value}" data-story="${esc(option.value)}">${esc(option.textContent)}</button>`).join("")}</div>`,
+          )
+          .join("");
+      }
+      function closeStoryPicker() {
+        $("story-picker-list").hidden = true;
+        $("story-picker-toggle").setAttribute("aria-expanded", "false");
+      }
+      async function loadUnityStory(id) {
+        const result = await api("story?id=" + encodeURIComponent(id));
+        const existing =
+          storyLibrary.items.find(
+            (item) => item.doc.id === id && item.slot === storyLibrary.active,
+          ) || storyLibrary.items.find((item) => item.doc.id === id);
+        const apply = async () => {
+          activateStory(
+            {
+              doc: result.document,
+              revision: result.revision,
+              selected: result.document.entry,
+              dirty: false,
+            },
+            existing?.slot,
+          );
+          await refreshCatalog(false);
+          message("已读取 Unity 保存的剧情源数据");
+        };
+        if (existing?.dirty) {
+          showModal(
+            "读取 Unity 剧情",
+            `<div class="help-card">${esc(result.document.title)} · ${esc(id)}<br>将用 Unity 保存的版本替换同名本地草稿，共 ${result.document.nodes.length} 张卡片。当前本地未回填的修改会被替换。</div><div class="modal-footer"><button id="confirm-read" class="primary">读取并替换本地版本</button></div>`,
+          );
+          $("confirm-read").onclick = run(apply);
+        } else await apply();
+      }
+      function copyStory() {
+        const copy = clone(doc);
+        copy.id = "story_" + crypto.randomUUID().replaceAll("-", "");
+        copy.title += " 副本";
+        activateStory({ doc: copy, selected: copy.entry, dirty: true });
+        message("已复制整套剧情并切换到新的剧情段");
+      }
+      $("copy-story").onclick = copyStory;
+      $("delete-story").onclick = run(async () => {
+        if (writing) throw new Error("请等待正在进行的 Unity 回填完成");
+        saveDraft();
+        const choice = $("unity-stories").value;
+        if (choice.startsWith("trash:"))
+          throw new Error("此剧情已经在本地回收站中，可点击读取恢复");
+        if (choice.startsWith("draft:")) {
+          const slot = choice.slice(6);
+          const item = clone(
+            storyLibrary.items.find((item) => item.slot === slot),
+          );
+          showModal(
+            "删除本地剧情",
+            `<div class="help-card">${esc(item.doc.title)} · ${esc(item.doc.id)}<br>共 ${item.doc.nodes.length} 张卡片，将移入本地回收站，保留 Unity 已回填版本。需要恢复时在剧情下拉框的回收站中选择它，再点击读取。</div><div class="modal-footer"><button class="danger" id="confirm-delete-story">删除这段本地剧情</button></div>`,
+          );
+          $("confirm-delete-story").onclick = () => {
+            storyLibrary.trash ||= [];
+            storyLibrary.trash.push(item);
+            storyLibrary.items = storyLibrary.items.filter(
+              (entry) => entry.slot !== slot,
+            );
+            if (slot === storyLibrary.active) {
+              const next = storyLibrary.items[0];
+              activateStory(
+                next || { doc: emptyStory(), dirty: true },
+                next?.slot,
+                false,
+              );
+            } else {
+              saveDraft();
+              $("modal").close();
+            }
+            message("本地剧情已移入回收站，可选择后读取恢复");
+          };
+        } else if (choice.startsWith("unity:")) {
+          const id = choice.slice(6);
+          const item = catalog.stories.find((item) => item.id === id);
+          showModal(
+            "删除 Unity 剧情",
+            `<div class="help-card">${esc(item.title)} · ${esc(id)}<br>将把生成的预制体和事件 SO 移入 Unity 项目的 AmanitaWebStory/Trash 回收目录，保留本地草稿和资源 GUID。可在 Unity Project 中移回 Generated 恢复。</div><div class="modal-footer"><button class="danger" id="confirm-delete-story">删除这段 Unity 剧情</button></div>`,
+          );
+          $("confirm-delete-story").onclick = run(async () => {
+            writing = true;
+            $("push").disabled = true;
+            try {
+              const result = await api("delete", {
+                id,
+                revision: item.revision,
+              });
+              for (const draft of [
+                ...storyLibrary.items,
+                ...(storyLibrary.trash || []),
+              ].filter((entry) => entry.doc.id === id)) {
+                draft.revision = "";
+                draft.dirty = true;
+                knownRevisions.set(revisionKey(id, draft.slot), "");
+              }
+              if (doc.id === id) {
+                revision = "";
+                dirty = true;
+              }
+              saveDraft();
+              await refreshCatalog(false);
+              showModal(
+                "Unity 剧情已删除",
+                `<div class="help-card">已移入：${esc(result.trashPath)}</div><p class="hint">本地草稿仍可编辑；重新回填会生成新的 Unity 资产。恢复旧资产时，将回收目录里的预制体和 SO 移回 Generated，再读取 Unity 版本。</p>`,
+              );
+            } finally {
+              writing = false;
+              $("push").disabled = false;
+            }
+          });
+        }
+      });
+      function applyTheme() {
+        const theme = uiPreferences.theme === "light" ? "light" : "dark";
+        document.documentElement.dataset.theme = theme;
+        $("theme-toggle").textContent =
+          theme === "dark" ? "☀ 白天模式" : "☾ 黑夜模式";
+      }
+      $("theme-toggle").onclick = () => {
+        uiPreferences.theme =
+          uiPreferences.theme === "light" ? "dark" : "light";
+        applyTheme();
+        saveUiPreferences();
+      };
+      function checkpoint() {
+        clearTimeout(historyTimer);
+        historyTimer = 0;
+        const value = snapshot();
+        if (history.at(-1) !== value) history.push(value);
+        if (history.length > 80) history.shift();
+        future = [];
+        refreshHistory();
+      }
+      function changed() {
+        dirty = true;
+        $("sync-state").textContent = "草稿已自动保存 · 待回填";
+        saveDraft();
+        refreshHeader();
+      }
+      function delayedCheckpoint() {
+        if (!historyTimer) {
+          checkpoint();
+          historyTimer = setTimeout(() => {
+            historyTimer = 0;
+          }, 600);
+        }
+      }
+      function refreshHistory() {
+        $("undo").disabled = history.length === 0;
+        $("redo").disabled = future.length === 0;
+      }
+      function restore(value) {
+        const state = JSON.parse(value);
+        doc = state.doc;
+        revision =
+          knownRevisions.get(revisionKey(doc.id)) ?? state.revision ?? "";
+        selected = state.selected;
+        dirty = true;
+        render();
+        saveDraft();
+        $("sync-state").textContent = dirty
+          ? "草稿已自动保存 · 待回填"
+          : "与 Unity 回填版本一致";
+      }
+      function undo() {
+        if (!history.length) return;
+        future.push(snapshot());
+        restore(history.pop());
+        refreshHistory();
+      }
+      function redo() {
+        if (!future.length) return;
+        history.push(snapshot());
+        restore(future.pop());
+        refreshHistory();
+      }
+      async function api(path, body) {
+        if (!token)
+          throw new Error(
+            "从 Unity 菜单 Tools / Fungus / 打开网页剧情编辑器 打开，才能一键回填",
+          );
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 30000);
+        try {
+          const response = await fetch("/api/" + path, {
+            method: body === undefined ? "GET" : "POST",
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+            body: body === undefined ? undefined : JSON.stringify(body),
+            signal: controller.signal,
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || "请求失败");
+          return data;
+        } catch (error) {
+          if (error.name === "AbortError")
+            throw new Error(
+              "Unity 请求超时，请检查编辑器状态。回填结果可能已写入，请先读取 Unity 版本确认后再提交。",
+            );
+          throw error;
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+      function run(action) {
+        return async () => {
+          try {
+            await action();
+          } catch (error) {
+            message(error.message, true);
+          }
+        };
+      }
+      function showModal(title, html) {
+        stopPreview();
+        finishGestures();
+        $("modal-title").textContent = title;
+        $("modal-body").innerHTML = html;
+        bindLabels($("modal-body"), "dialog-field");
+        if (!$("modal").open) $("modal").showModal();
+      }
+      function bindLabels(root, prefix) {
+        root.querySelectorAll("label").forEach((label, index) => {
+          const input = label.nextElementSibling;
+          if (
+            !input ||
+            !["INPUT", "SELECT", "TEXTAREA"].includes(input.tagName)
+          )
+            return;
+          if (!input.id) input.id = prefix + "-" + index;
+          label.htmlFor = input.id;
+        });
+      }
+      function refreshHeader() {
+        $("graph-title").textContent = doc.title;
+        $("node-count").textContent = doc.nodes.length + " 张";
+        if ($("story-title").readOnly) $("story-title").value = doc.title;
+      }
+      function ports(node) {
+        if (node.type === "end") return [];
+        if (node.type === "choice")
+          return (node.options || []).map((o, i) => ({
+            field: "option:" + i,
+            label: o.text || "选项 " + (i + 1),
+            target: o.target,
+          }));
+        if (node.type === "condition")
+          return [
+            { field: "onTrue", label: "满足条件", target: node.onTrue },
+            { field: "onFalse", label: "不满足", target: node.onFalse },
+          ];
+        return [{ field: "next", label: "继续", target: node.next }];
+      }
+      function nodeSummary(node) {
+        switch (node.type) {
+          case "say":
+            return (
+              (catalog.actors.find((a) => a.id === node.actor)?.title ||
+                "旁白") +
+              "：" +
+              (node.text || "填写对白…")
+            );
+          case "choice":
+            return (node.options || []).map((o) => o.text).join(" / ");
+          case "condition":
+            return (
+              variableTitle(node.variable) +
+              " " +
+              ({
+                eq: "等于",
+                neq: "不等于",
+                gt: "大于",
+                gte: "至少",
+                lt: "小于",
+                lte: "至多",
+              }[node.comparison] || "等于") +
+              " " +
+              node.value
+            );
+          case "set":
+            return (
+              variableTitle(node.variable) +
+              " " +
+              ({ assign: "设为", add: "增加", subtract: "减少" }[
+                node.operation
+              ] || "设为") +
+              " " +
+              (node.value ?? "")
+            );
+          case "event":
+            return (
+              (node.eventMode === "signal"
+                ? node.eventTitle || "填写事件名称"
+                : catalog.events.find((e) => e.id === node.eventId)?.title ||
+                  "选择 Unity 能力") +
+              " · " +
+              (node.value ?? "")
+            );
+          case "wait":
+            return "等待 " + node.seconds + " 秒";
+          case "sound":
+            return (
+              catalog.audio.find((a) => a.id === node.audio)?.title ||
+              "选择音效…"
+            );
+          default:
+            return "这条路线在这里结束";
+        }
+      }
+      function variableTitle(key) {
+        return doc.variables.find((v) => v.key === key)?.title || "选择变量";
+      }
+      function render() {
+        finishGestures();
+        selectedWire = null;
+        refreshHeader();
+        renderGraph();
+        renderOutline();
+        renderInspector();
+        refreshHistory();
+      }
+      function renderGraph() {
+        const box = $("nodes");
+        box.innerHTML = doc.nodes
+          .map(
+            (n) =>
+              `<article class="node ${n.id === selected ? "selected" : ""}" tabindex="0" aria-label="卡片 ${esc(n.title)}" data-id="${esc(n.id)}" style="left:${Number(n.x) || 0}px;top:${Number(n.y) || 0}px;--node-color:${kinds[n.type]?.color || "#aab"}"><button class="port in" title="连接到此卡片" aria-label="连接到 ${esc(n.title)}" data-target="${esc(n.id)}"></button><div class="node-top"><span>${kinds[n.type]?.icon || "?"} ${kinds[n.type]?.title || "未知类型"}</span><span>${doc.entry === n.id ? "▶ 开始" : ""}</span></div><div class="node-body"><div class="node-title">${esc(n.title)}</div><div class="node-preview">${esc(nodeSummary(n))}</div></div><div class="outputs">${ports(
+                n,
+              )
+                .map(
+                  (p) =>
+                    `<div class="output">${esc(p.label.slice(0, 18))}<button class="port ${linking?.id === n.id && linking.field === p.field ? "linking" : ""}" data-node="${esc(n.id)}" data-field="${esc(p.field)}" title="连接${esc(p.label)}" aria-label="${esc(n.title)}：连接${esc(p.label)}"></button></div>`,
+                )
+                .join("")}</div></article>`,
+          )
+          .join("");
+        requestAnimationFrame(drawWires);
+      }
+      function collapsedNodes() {
+        return new Set(
+          Object.hasOwn(uiPreferences.collapsed, doc.id)
+            ? uiPreferences.collapsed[doc.id]
+            : [],
+        );
+      }
+      function buildOutlineRows() {
+        const entry = doc.nodes.find((node) => node.id === doc.entry);
+        const cards = entry
+          ? [entry, ...doc.nodes.filter((node) => node !== entry)]
+          : doc.nodes;
+        return cards.map((node) => ({
+          id: node.id,
+          title: node.title,
+          type: node.type,
+          ancestors: entry && node !== entry ? [entry.id] : [],
+          children: node === entry && cards.length > 1,
+        }));
+      }
+      function renderOutline() {
+        outlineRows = buildOutlineRows();
+        const collapsed = collapsedNodes();
+        $("outline").innerHTML = outlineRows
+          .filter((row) => !row.ancestors.some((id) => collapsed.has(id)))
+          .map((row) => {
+            const expanded = !collapsed.has(row.id);
+            return `<div class="outline-item ${row.id === selected ? "selected" : ""}" role="treeitem" aria-level="${row.ancestors.length + 1}" aria-selected="${row.id === selected}" ${row.children ? `aria-expanded="${expanded}"` : ""} tabindex="0" data-id="${esc(row.id)}" style="padding-left:${6 + row.ancestors.length * 12}px" title="${esc(row.title)}">${row.children ? `<button class="outline-fold" tabindex="-1" data-fold="${esc(row.id)}" aria-label="${expanded ? "折叠" : "展开"} ${esc(row.title)}">${expanded ? "▾" : "▸"}</button>` : '<span class="outline-fold"></span>'}<span style="color:${kinds[row.type]?.color}">${doc.entry === row.id ? "▶" : kinds[row.type]?.icon}</span><span class="outline-copy"><span class="outline-label">${esc(row.title)}</span></span></div>`;
+          })
+          .join("");
+      }
+      function toggleOutline(id, collapse) {
+        if (id !== doc.entry) return;
+        const collapsed = collapsedNodes();
+        const shouldCollapse = collapse ?? !collapsed.has(id);
+        if (shouldCollapse) collapsed.add(id);
+        else collapsed.delete(id);
+        uiPreferences.collapsed[doc.id] = [...collapsed];
+        saveUiPreferences();
+        renderOutline();
+        $("outline")
+          .querySelector(`[data-id="${CSS.escape(id)}"]`)
+          ?.focus({ preventScroll: true });
+      }
+      function wireCurve(from, to) {
+        const bend = Math.max(70, Math.abs(to.x - from.x) / 2);
+        return `M${from.x},${from.y} C${from.x + bend},${from.y} ${to.x - bend},${to.y} ${to.x},${to.y}`;
+      }
+      function stagePoint(clientX, clientY) {
+        const rect = $("stage").getBoundingClientRect();
+        return {
+          x: (clientX - rect.left) / zoom,
+          y: (clientY - rect.top) / zoom,
+        };
+      }
+      function drawWires() {
+        const stageRect = $("stage").getBoundingClientRect();
+        const inputs = new Map(),
+          outputs = new Map();
+        const titles = new Map(doc.nodes.map((node) => [node.id, node.title]));
+        for (const port of $("nodes").querySelectorAll(".port")) {
+          const rect = port.getBoundingClientRect();
+          const point = {
+            x: (rect.left + rect.width / 2 - stageRect.left) / zoom,
+            y: (rect.top + rect.height / 2 - stageRect.top) / zoom,
+          };
+          if (port.dataset.target) inputs.set(port.dataset.target, point);
+          else outputs.set(port.dataset.node + ":" + port.dataset.field, point);
+        }
+        let paths = "";
+        for (const node of doc.nodes)
+          for (const port of ports(node)) {
+            const from = outputs.get(node.id + ":" + port.field),
+              to = inputs.get(port.target);
+            if (!from || !to) continue;
+            const chosen =
+              selectedWire?.id === node.id &&
+              selectedWire.field === port.field &&
+              selectedWire.target === port.target;
+            const label =
+              node.title + " / " + port.label + " → " + titles.get(port.target);
+            const curve = wireCurve(from, to);
+            paths += `<g class="wire-group" role="button" tabindex="0" aria-label="连接线 ${esc(label)}" aria-pressed="${chosen}" data-edge-node="${esc(node.id)}" data-edge-field="${esc(port.field)}"><title>${esc(label)} · 选中后按 Del 断开</title><path class="wire-hit" d="${curve}"/><path class="wire ${chosen ? "selected" : node.id === selected ? "active" : ""}" d="${curve}"/></g>`;
+          }
+        if (linking?.point) {
+          const from = outputs.get(linking.id + ":" + linking.field);
+          if (from)
+            paths += `<path class="wire-preview" d="${wireCurve(from, linking.point)}"/>`;
+        }
+        $("wires").innerHTML = paths;
+      }
+      function selectNode(id, focus = false, activate = true) {
+        selectedWire = null;
+        selected = id;
+        graphSelectionActive = activate;
+        if (focus && activate) {
+          const row = buildOutlineRows().find((row) => row.id === id);
+          const collapsed = collapsedNodes();
+          for (const ancestor of row?.ancestors || [])
+            collapsed.delete(ancestor);
+          uiPreferences.collapsed[doc.id] = [...collapsed];
+          saveUiPreferences();
+        }
+        renderGraph();
+        renderOutline();
+        renderInspector();
+        $("canvas-tip").textContent = defaultCanvasTip;
+        if (focus) {
+          const node = doc.nodes.find((node) => node.id === id);
+          if (node)
+            $("viewport").scrollTo({
+              left: Math.max(0, node.x * zoom - 75),
+              top: Math.max(0, node.y * zoom - 150),
+              behavior: "smooth",
+            });
+        }
+      }
+      function writePort(node, field, target) {
+        if (field.startsWith("option:"))
+          node.options[Number(field.split(":")[1])].target = target;
+        else node[field] = target;
+      }
+      function cancelLink() {
+        const previous = linking;
+        linking = null;
+        if (
+          previous?.pointerId != null &&
+          $("stage").hasPointerCapture(previous.pointerId)
+        )
+          $("stage").releasePointerCapture(previous.pointerId);
+        for (const port of $("nodes").querySelectorAll(".linking,.drop-ready"))
+          port.classList.remove("linking", "drop-ready");
+        $("canvas-tip").textContent = defaultCanvasTip;
+        drawWires();
+      }
+      function setLink(target) {
+        const source = linking;
+        if (!source) return;
+        const node = doc.nodes.find((node) => node.id === source.id);
+        const port =
+          node && ports(node).find((port) => port.field === source.field);
+        if (!port || !doc.nodes.some((node) => node.id === target)) {
+          cancelLink();
+          return;
+        }
+        if (port.target === target) {
+          cancelLink();
+          return;
+        }
+        checkpoint();
+        writePort(node, source.field, target);
+        cancelLink();
+        selected = node.id;
+        graphSelectionActive = true;
+        changed();
+        render();
+        message(
+          "已连接「" +
+            node.title +
+            "」→「" +
+            doc.nodes.find((node) => node.id === target).title +
+            "」",
+        );
+      }
+      function beginLink(id, field, event) {
+        cancelLink();
+        selectedWire = null;
+        selected = id;
+        graphSelectionActive = true;
+        linking = {
+          id,
+          field,
+          pointerId: event?.pointerId ?? null,
+          startX: event?.clientX,
+          startY: event?.clientY,
+          moved: false,
+          point: event ? stagePoint(event.clientX, event.clientY) : null,
+        };
+        if (event) {
+          event.preventDefault();
+          $("stage").focus({ preventScroll: true });
+          $("stage").setPointerCapture(event.pointerId);
+        }
+        for (const node of $("nodes").querySelectorAll(".node"))
+          node.classList.toggle("selected", node.dataset.id === id);
+        $("nodes")
+          .querySelector(
+            `[data-node="${CSS.escape(id)}"][data-field="${CSS.escape(field)}"]`,
+          )
+          .classList.add("linking");
+        renderOutline();
+        renderInspector();
+        $("canvas-tip").textContent =
+          "拖到目标卡片松开连接 · 空白处松开或 Esc 取消 · 原连接在确认前保留";
+        drawWires();
+      }
+      function dropTarget(clientX, clientY) {
+        const element = document.elementFromPoint(clientX, clientY);
+        if (!element || element.closest("[data-node][data-field]")) return null;
+        return element.closest(".node")?.dataset.id || null;
+      }
+      function chooseWire(id, field) {
+        cancelLink();
+        const node = doc.nodes.find((node) => node.id === id);
+        const port = node && ports(node).find((port) => port.field === field);
+        if (!port?.target) return;
+        selectedWire = { id, field, target: port.target };
+        selected = "";
+        graphSelectionActive = true;
+        renderGraph();
+        renderOutline();
+        renderInspector();
+        $("canvas-tip").textContent =
+          "已选中连接线 · 按 Del 断开 · Ctrl+Z 撤销";
+      }
+      function disconnectSelection() {
+        const edgeList = [];
+        for (const node of doc.nodes)
+          for (const port of ports(node)) {
+            if (!port.target) continue;
+            if (
+              selectedWire
+                ? selectedWire.id === node.id &&
+                  selectedWire.field === port.field &&
+                  selectedWire.target === port.target
+                : node.id === selected || port.target === selected
+            )
+              edgeList.push({ node, field: port.field });
+          }
+        if (!edgeList.length) {
+          message("当前选择没有可断开的连接");
+          return;
+        }
+        checkpoint();
+        for (const edge of edgeList) writePort(edge.node, edge.field, "");
+        selectedWire = null;
+        changed();
+        render();
+        message(
+          "已断开 " + edgeList.length + " 条连接，卡片保留 · Ctrl+Z 可撤销",
+        );
+      }
+      function removeCard(id) {
+        const node = doc.nodes.find((item) => item.id === id);
+        if (!node) return;
+        checkpoint();
+        doc.nodes = doc.nodes.filter((item) => item !== node);
+        for (const other of doc.nodes)
+          for (const port of ports(other))
+            if (port.target === id) writePort(other, port.field, "");
+        if (doc.entry === id) doc.entry = doc.nodes[0]?.id || "";
+        selected = "";
+        changed();
+        render();
+        $("stage").focus({ preventScroll: true });
+        message("已删除卡片及关联连线 · Ctrl+Z 可撤销");
+      }
+      function insertCard(source, variables = []) {
+        if (doc.nodes.length >= 1000)
+          throw new Error("每段剧情最多支持 1000 张卡片");
+        const missingVariables = [];
+        for (const variable of variables) {
+          const existing = doc.variables.find(
+            (item) => item.key === variable.key,
+          );
+          if (existing && existing.type !== variable.type)
+            throw new Error(
+              "目标剧情变量「" + variable.key + "」类型不同，请先调整变量",
+            );
+          if (!existing) missingVariables.push(clone(variable));
+        }
+        const copy = clone(source);
+        copy.id = uniqueId(copy.type);
+        copy.title += " 副本";
+        for (const port of ports(copy))
+          writePort(copy, port.field, port.target === source.id ? copy.id : "");
+        const viewport = $("viewport");
+        copy.x = Math.round(viewport.scrollLeft / zoom + 120);
+        copy.y = Math.round(viewport.scrollTop / zoom + 160);
+        while (
+          doc.nodes.some(
+            (item) =>
+              Math.abs(item.x - copy.x) < 28 && Math.abs(item.y - copy.y) < 28,
+          )
+        ) {
+          copy.x += 32;
+          copy.y += 32;
+        }
+        checkpoint();
+        doc.variables.push(...missingVariables);
+        doc.nodes.push(copy);
+        if (!doc.entry) doc.entry = copy.id;
+        selected = copy.id;
+        graphSelectionActive = true;
+        changed();
+        render();
+        selectNode(copy.id, true);
+        $("stage").focus({ preventScroll: true });
+        message("已粘贴独立卡片，外部连线需重新连接 · Ctrl+Z 可撤销");
+      }
+      function editingText(target) {
+        return (
+          target instanceof Element &&
+          target.closest(
+            'input,textarea,select,[contenteditable]:not([contenteditable="false"]),[role="textbox"]',
+          )
+        );
+      }
+      function cardShortcutScope(event) {
+        if (
+          editingText(event.target) ||
+          $("modal").open ||
+          resizeState ||
+          linking ||
+          drag
+        )
+          return false;
+        return (
+          event.target instanceof Element &&
+          (event.target.closest("#stage,#outline") ||
+            (event.target === document.body && graphSelectionActive))
+        );
+      }
+      function copyCard(event, cut) {
+        if (!cardShortcutScope(event) || selectedWire || !event.clipboardData)
+          return;
+        const node = doc.nodes.find((item) => item.id === selected);
+        if (!node) return;
+        const keys = new Set([node.variable]);
+        const texts = [
+          node.text,
+          ...(node.options || []).map((option) => option.text),
+        ];
+        for (const text of texts)
+          for (const match of (text || "").matchAll(/\{\$(\w+)\}/g))
+            keys.add(match[1]);
+        const variables = doc.variables.filter((variable) =>
+          keys.has(variable.key),
+        );
+        event.clipboardData.setData(
+          "text/plain",
+          JSON.stringify({
+            format: "amanita.story-card",
+            version: 1,
+            card: node,
+            variables,
+          }),
+        );
+        event.preventDefault();
+        if (cut) removeCard(node.id);
+        else message("卡片已复制 · Ctrl+V 粘贴");
+      }
+      document.addEventListener("copy", (event) => copyCard(event, false));
+      document.addEventListener("cut", (event) => copyCard(event, true));
+      document.addEventListener("paste", (event) => {
+        if (!cardShortcutScope(event) || !event.clipboardData) return;
+        const text = event.clipboardData.getData("text/plain");
+        try {
+          if (text.length > 4 * 1024 * 1024)
+            throw new Error("剪贴板数据超过 4MB");
+          const data = JSON.parse(text);
+          if (data?.format !== "amanita.story-card") return;
+          event.preventDefault();
+          const node = data.card;
+          const stringFields = [
+            "id",
+            "title",
+            "type",
+            "next",
+            "actor",
+            "portrait",
+            "text",
+            "voice",
+            "variable",
+            "operation",
+            "comparison",
+            "value",
+            "onTrue",
+            "onFalse",
+            "eventId",
+            "eventMode",
+            "eventTitle",
+            "eventValueKind",
+            "audio",
+          ];
+          const numberFields = ["x", "y", "seconds", "volume"];
+          if (
+            data.version !== 1 ||
+            !node ||
+            !Object.hasOwn(kinds, node.type) ||
+            typeof node.id !== "string" ||
+            typeof node.title !== "string" ||
+            !Number.isFinite(node.x) ||
+            !Number.isFinite(node.y) ||
+            !Array.isArray(data.variables) ||
+            Object.keys(node).some(
+              (key) =>
+                ![...stringFields, ...numberFields, "options", "wait"].includes(
+                  key,
+                ),
+            ) ||
+            stringFields.some(
+              (key) => node[key] != null && typeof node[key] !== "string",
+            ) ||
+            numberFields.some(
+              (key) => node[key] != null && !Number.isFinite(node[key]),
+            ) ||
+            (node.wait != null && typeof node.wait !== "boolean") ||
+            (node.options != null &&
+              (!Array.isArray(node.options) ||
+                node.options.some(
+                  (option) =>
+                    !option ||
+                    typeof option.text !== "string" ||
+                    typeof option.target !== "string",
+                ))) ||
+            (node.type === "choice" && !Array.isArray(node.options))
+          )
+            throw new Error("剪贴板中的卡片格式无效");
+          const keys = new Set();
+          for (const variable of data.variables) {
+            if (
+              !variable ||
+              !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(variable.key) ||
+              keys.has(variable.key) ||
+              typeof variable.title !== "string"
+            )
+              throw new Error("剪贴板中的变量格式无效");
+            keys.add(variable.key);
+            const errors = [];
+            checkValue(variable.type, variable.value, variable.key, errors);
+            if (
+              !["Integer", "Float", "Boolean", "String"].includes(
+                variable.type,
+              ) ||
+              errors.length
+            )
+              throw new Error("剪贴板中的变量类型或初始值无效");
+          }
+          insertCard(node, data.variables);
+        } catch (error) {
+          if (error instanceof SyntaxError) return;
+          event.preventDefault();
+          message(error.message, true);
+        }
+      });
+      function finishNodeDrag() {
+        const previous = drag;
+        drag = null;
+        if (previous && $("stage").hasPointerCapture(previous.pointerId))
+          $("stage").releasePointerCapture(previous.pointerId);
+        if (previous?.moved && previous.document === doc) {
+          changed();
+          renderOutline();
+        }
+      }
+      function finishGestures() {
+        if (linking) cancelLink();
+        finishNodeDrag();
+        finishResize();
+      }
+      $("nodes").addEventListener("click", (event) => {
+        const output = event.target.closest("[data-node][data-field]"),
+          card = event.target.closest(".node");
+        if (output) {
+          if (event.detail !== 0) return;
+          if (
+            !linking ||
+            linking.id !== output.dataset.node ||
+            linking.field !== output.dataset.field
+          )
+            beginLink(output.dataset.node, output.dataset.field);
+          return;
+        }
+        if (card) {
+          if (linking) setLink(card.dataset.id);
+          else selectNode(card.dataset.id);
+        }
+      });
+      $("nodes").addEventListener("keydown", (event) => {
+        if (
+          (event.key === "Enter" || event.key === " ") &&
+          event.target.matches(".node")
+        ) {
+          event.preventDefault();
+          selectNode(event.target.dataset.id);
+        }
+      });
+      $("nodes").addEventListener("pointerdown", (event) => {
+        if (event.button !== 0 || event.isPrimary === false) return;
+        const output = event.target.closest("[data-node][data-field]");
+        if (output) {
+          beginLink(output.dataset.node, output.dataset.field, event);
+          return;
+        }
+        if (event.target.closest("button") || linking) return;
+        const card = event.target.closest(".node");
+        if (!card) return;
+        const node = doc.nodes.find((node) => node.id === card.dataset.id);
+        selected = node.id;
+        selectedWire = null;
+        graphSelectionActive = true;
+        for (const item of $("nodes").querySelectorAll(".node"))
+          item.classList.toggle("selected", item === card);
+        renderOutline();
+        renderInspector();
+        drawWires();
+        drag = {
+          id: node.id,
+          pointerId: event.pointerId,
+          x: event.clientX,
+          y: event.clientY,
+          originX: node.x,
+          originY: node.y,
+          moved: false,
+          document: doc,
+        };
+        $("stage").setPointerCapture(event.pointerId);
+      });
+      $("wires").addEventListener("click", (event) => {
+        const edge = event.target.closest("[data-edge-node]");
+        if (edge) chooseWire(edge.dataset.edgeNode, edge.dataset.edgeField);
+      });
+      $("wires").addEventListener("keydown", (event) => {
+        const edge = event.target.closest("[data-edge-node]");
+        if (edge && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          chooseWire(edge.dataset.edgeNode, edge.dataset.edgeField);
+        }
+      });
+      $("viewport").addEventListener("pointerdown", (event) => {
+        if (
+          event.button !== 0 ||
+          event.target.closest(".node,[data-edge-node]")
+        )
+          return;
+        if (linking) cancelLink();
+        selected = "";
+        selectedWire = null;
+        graphSelectionActive = false;
+        $("stage").focus({ preventScroll: true });
+        renderGraph();
+        renderOutline();
+        renderInspector();
+      });
+      window.addEventListener("pointermove", (event) => {
+        if (resizeState?.pointerId === event.pointerId) {
+          moveResize(event);
+          return;
+        }
+        if (linking?.pointerId === event.pointerId) {
+          linking.moved ||=
+            Math.hypot(
+              event.clientX - linking.startX,
+              event.clientY - linking.startY,
+            ) >= 4;
+          linking.point = stagePoint(event.clientX, event.clientY);
+          const target = dropTarget(event.clientX, event.clientY);
+          for (const port of $("nodes").querySelectorAll(".port.in"))
+            port.classList.toggle("drop-ready", port.dataset.target === target);
+          drawWires();
+          return;
+        }
+        if (!drag || drag.pointerId !== event.pointerId) return;
+        const dx = (event.clientX - drag.x) / zoom,
+          dy = (event.clientY - drag.y) / zoom;
+        if (!drag.moved && Math.abs(dx) + Math.abs(dy) < 4) return;
+        if (!drag.moved) {
+          checkpoint();
+          drag.moved = true;
+        }
+        const node = doc.nodes.find((node) => node.id === drag.id);
+        node.x = Math.round(Math.max(15, Math.min(2900, drag.originX + dx)));
+        node.y = Math.round(Math.max(75, Math.min(2100, drag.originY + dy)));
+        const card = $("nodes").querySelector(
+          `[data-id="${CSS.escape(node.id)}"]`,
+        );
+        card.style.left = node.x + "px";
+        card.style.top = node.y + "px";
+        drawWires();
+      });
+      window.addEventListener("pointerup", (event) => {
+        if (resizeState?.pointerId === event.pointerId) {
+          finishResize();
+          return;
+        }
+        if (linking?.pointerId === event.pointerId) {
+          const target = dropTarget(event.clientX, event.clientY),
+            moved = linking.moved;
+          if ($("stage").hasPointerCapture(event.pointerId))
+            $("stage").releasePointerCapture(event.pointerId);
+          linking.pointerId = null;
+          if (moved) {
+            if (target) setLink(target);
+            else cancelLink();
+          }
+          return;
+        }
+        if (drag?.pointerId === event.pointerId) finishNodeDrag();
+      });
+      window.addEventListener("pointercancel", finishGestures);
+      window.addEventListener("blur", finishGestures);
+      $("outline").addEventListener("click", (event) => {
+        const fold = event.target.closest("[data-fold]");
+        if (fold) {
+          toggleOutline(fold.dataset.fold);
+          return;
+        }
+        const item = event.target.closest("[data-id]");
+        if (item) selectNode(item.dataset.id, true);
+      });
+      $("outline").addEventListener("keydown", (event) => {
+        const item = event.target.closest('[role="treeitem"]');
+        if (!item) return;
+        if (event.key === "Enter") {
+          event.preventDefault();
+          selectNode(item.dataset.id, true);
+        }
+        if (event.key === "ArrowRight" && item.hasAttribute("aria-expanded")) {
+          event.preventDefault();
+          toggleOutline(item.dataset.id, false);
+        }
+        if (event.key === "ArrowLeft" && item.hasAttribute("aria-expanded")) {
+          event.preventDefault();
+          toggleOutline(item.dataset.id, true);
+        }
+        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+          event.preventDefault();
+          const items = [...$("outline").querySelectorAll('[role="treeitem"]')];
+          items[
+            Math.max(
+              0,
+              Math.min(
+                items.length - 1,
+                items.indexOf(item) + (event.key === "ArrowDown" ? 1 : -1),
+              ),
+            )
+          ].focus();
+        }
+      });
+      function saveUiPreferences() {
+        localStorage.setItem(layoutKey, JSON.stringify(uiPreferences));
+      }
+      function loadUiPreferences() {
+        const saved = localStorage.getItem(layoutKey);
+        if (saved) {
+          const value = JSON.parse(saved);
+          if (
+            !Number.isFinite(value.leftWidth) ||
+            !Number.isFinite(value.rightWidth) ||
+            !value.collapsed ||
+            typeof value.collapsed !== "object" ||
+            Object.values(value.collapsed).some(
+              (ids) =>
+                !Array.isArray(ids) || ids.some((id) => typeof id !== "string"),
+            )
+          )
+            throw new Error("界面布局设置损坏");
+          uiPreferences = value;
+        }
+        applyTheme();
+        refreshLayout();
+      }
+      function refreshLayout() {
+        const budget =
+          document.querySelector(".shell").getBoundingClientRect().width -
+          280 -
+          16;
+        let left = Math.max(180, Math.min(500, uiPreferences.leftWidth)),
+          right = Math.max(240, Math.min(560, uiPreferences.rightWidth));
+        if (left + right > budget) {
+          const available = Math.max(0, budget - 180 - 240),
+            extra = left - 180 + right - 240;
+          const fraction = extra ? available / extra : 0;
+          left = 180 + (left - 180) * fraction;
+          right = 240 + (right - 240) * fraction;
+        }
+        for (const [side, width] of [
+          ["left", left],
+          ["right", right],
+        ]) {
+          document.documentElement.style.setProperty(
+            "--" + side + "-width",
+            Math.round(width) + "px",
+          );
+          $(side + "-divider").setAttribute("aria-valuenow", Math.round(width));
+          $(side + "-divider").setAttribute(
+            "aria-valuemin",
+            panelLimits[side].min,
+          );
+          $(side + "-divider").setAttribute(
+            "aria-valuemax",
+            Math.min(
+              panelLimits[side].max,
+              budget - (side === "left" ? right : left),
+            ),
+          );
+        }
+        requestAnimationFrame(drawWires);
+      }
+      function resizePanel(side, width) {
+        const other = Number(
+          $(side === "left" ? "right-divider" : "left-divider").getAttribute(
+            "aria-valuenow",
+          ),
+        );
+        const max = Math.min(
+          panelLimits[side].max,
+          document.querySelector(".shell").getBoundingClientRect().width -
+            280 -
+            16 -
+            other,
+        );
+        uiPreferences[(side === "left" ? "right" : "left") + "Width"] = other;
+        uiPreferences[side + "Width"] = Math.max(
+          panelLimits[side].min,
+          Math.min(max, width),
+        );
+        refreshLayout();
+      }
+      function moveResize(event) {
+        resizePanel(
+          resizeState.side,
+          resizeState.initialWidth +
+            (event.clientX - resizeState.startX) *
+              (resizeState.side === "left" ? 1 : -1),
+        );
+      }
+      function finishResize() {
+        const previous = resizeState;
+        resizeState = null;
+        if (!previous) return;
+        previous.element.classList.remove("dragging");
+        document.body.classList.remove("resizing");
+        if (previous.element.hasPointerCapture(previous.pointerId))
+          previous.element.releasePointerCapture(previous.pointerId);
+        saveUiPreferences();
+      }
+      for (const side of ["left", "right"]) {
+        const divider = $(side + "-divider");
+        divider.addEventListener("pointerdown", (event) => {
+          if (event.button !== 0 || event.isPrimary === false) return;
+          finishGestures();
+          event.preventDefault();
+          divider.focus({ preventScroll: true });
+          resizeState = {
+            side,
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            initialWidth: Number(divider.getAttribute("aria-valuenow")),
+            element: divider,
+          };
+          divider.setPointerCapture(event.pointerId);
+          divider.classList.add("dragging");
+          document.body.classList.add("resizing");
+        });
+        divider.addEventListener("dblclick", () => {
+          resizePanel(side, panelLimits[side].initial);
+          saveUiPreferences();
+        });
+        divider.addEventListener("keydown", (event) => {
+          if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
+            return;
+          event.preventDefault();
+          const current = Number(divider.getAttribute("aria-valuenow"));
+          resizePanel(
+            side,
+            event.key === "Home"
+              ? panelLimits[side].min
+              : event.key === "End"
+                ? panelLimits[side].max
+                : current +
+                  (event.key === "ArrowRight" ? 16 : -16) *
+                    (side === "left" ? 1 : -1),
+          );
+          saveUiPreferences();
+        });
+      }
+      function targetSelect(value, attr) {
+        return `<select ${attr}><option value="">请选择后续卡片</option>${doc.nodes.map((n) => `<option value="${esc(n.id)}" ${value === n.id ? "selected" : ""}>${esc(n.title)}</option>`).join("")}</select>`;
+      }
+      function optionsSelect(items, value, attr, empty = "不使用") {
+        return `<select ${attr}><option value="">${empty}</option>${items.map((i) => `<option value="${esc(i.id)}" ${i.id === value ? "selected" : ""} ${i.ready === false ? "disabled" : ""}>${esc(i.title)}${i.ready === false ? "（尚未绑定）" : ""}</option>`).join("")}</select>`;
+      }
+      function valueEditor(type, value, attr) {
+        return type === "Boolean"
+          ? `<select ${attr}><option value="false" ${value === "false" ? "selected" : ""}>关闭 / 否</option><option value="true" ${value === "true" ? "selected" : ""}>开启 / 是</option></select>`
+          : type === "None"
+            ? '<p class="hint">此事件不需要参数</p>'
+            : `<input ${attr} type="${type === "Integer" || type === "Float" ? "number" : "text"}" ${type === "Integer" ? 'step="1"' : type === "Float" ? 'step="any"' : ""} value="${esc(value)}">`;
+      }
+      function renderInspector() {
+        if (selectedWire) {
+          const source = doc.nodes.find((node) => node.id === selectedWire.id);
+          const target = doc.nodes.find(
+            (node) => node.id === selectedWire.target,
+          );
+          const port =
+            source &&
+            ports(source).find(
+              (port) =>
+                port.field === selectedWire.field &&
+                port.target === selectedWire.target,
+            );
+          if (port && target) {
+            $("inspector").innerHTML =
+              `<div class="eyebrow">CONNECTION / 连接线</div><h2>连接线设置</h2><div class="help-card">${esc(source.title)}<br>${esc(port.label)} → ${esc(target.title)}</div><p class="hint">按 Del 或点击按钮断开这条线。卡片会保留，可用 Ctrl+Z 撤销。</p><button class="danger" id="disconnect-wire">断开这条连线</button>`;
+            $("disconnect-wire").onclick = disconnectSelection;
+            return;
+          }
+          selectedWire = null;
+        }
+        const n = doc.nodes.find((n) => n.id === selected);
+        if (!n) {
+          $("inspector").innerHTML =
+            '<div class="empty">选择一个卡片开始编辑</div>';
+          return;
+        }
+        let fields = "";
+        switch (n.type) {
+          case "say": {
+            const actor = catalog.actors.find((a) => a.id === n.actor);
+            fields = `<label>说话的人</label>${optionsSelect(catalog.actors, n.actor, 'data-prop="actor"', "旁白")}<label>对白内容</label><textarea data-prop="text" rows="6">${esc(n.text)}</textarea><p class="hint">变量写法：{$Trust}。网页试读显示纯文字，Unity 支持原生文字标签。</p><label>表情头像</label>${optionsSelect(actor?.portraits || [], n.portrait, 'data-prop="portrait"', "不使用头像")}<label>配音</label>${optionsSelect(catalog.audio, n.voice, 'data-prop="voice"', "无配音")}`;
+            break;
+          }
+          case "choice":
+            fields = `<p class="hint">选项展示给玩家，选中后跳转到对应卡片。</p>${(n.options || []).map((o, i) => `<div class="option-editor"><div class="row"><strong class="grow">选项 ${i + 1}</strong><button class="ghost danger" data-remove-option="${i}" style="padding:1px 6px">移除</button></div><label>玩家看到的文字</label><input data-option-text="${i}" value="${esc(o.text)}"><label>选中后执行</label>${targetSelect(o.target, `data-option-target="${i}"`)}</div>`).join("")}<button id="add-option" class="ghost" style="margin-top:10px;width:100%">＋ 添加选项</button>`;
+            break;
+          case "condition":
+          case "set": {
+            const variable = doc.variables.find((v) => v.key === n.variable),
+              numeric =
+                variable?.type === "Integer" || variable?.type === "Float";
+            fields = `<label>剧情变量</label>${optionsSelect(
+              doc.variables.map((v) => ({ id: v.key, title: v.title })),
+              n.variable,
+              'data-prop="variable"',
+              "请选择变量",
+            )}`;
+            if (n.type === "set")
+              fields += `<label>如何修改</label><select data-prop="operation">${[
+                { id: "assign", title: "直接设为" },
+                ...(numeric
+                  ? [
+                      { id: "add", title: "增加" },
+                      { id: "subtract", title: "减少" },
+                    ]
+                  : []),
+              ]
+                .map(
+                  (o) =>
+                    `<option value="${o.id}" ${o.id === n.operation ? "selected" : ""}>${o.title}</option>`,
+                )
+                .join("")}</select>`;
+            else
+              fields += `<label>怎样算满足</label><select data-prop="comparison">${[
+                { id: "eq", title: "等于" },
+                { id: "neq", title: "不等于" },
+                ...(numeric
+                  ? [
+                      { id: "gt", title: "大于" },
+                      { id: "gte", title: "大于或等于" },
+                      { id: "lt", title: "小于" },
+                      { id: "lte", title: "小于或等于" },
+                    ]
+                  : []),
+              ]
+                .map(
+                  (o) =>
+                    `<option value="${o.id}" ${o.id === (n.comparison || "eq") ? "selected" : ""}>${o.title}</option>`,
+                )
+                .join("")}</select>`;
+            fields += `<label>${n.type === "condition" ? "与这个值比较" : "修改数值"} · ${typeTitles[variable?.type] || "先选变量"}</label>${valueEditor(variable?.type, n.value, 'data-prop="value"')}`;
+            if (n.type === "condition")
+              fields += `<label>满足条件时</label>${targetSelect(n.onTrue, 'data-prop="onTrue"')}<label>不满足条件时</label>${targetSelect(n.onFalse, 'data-prop="onFalse"')}`;
+            break;
+          }
+          case "wait":
+            fields = `<label>等待秒数</label><input type="number" min="0" max="3600" step="0.1" data-prop="seconds" value="${esc(n.seconds)}"><p class="hint">单位为秒。暂停游戏时间时，等待也会暂停。</p>`;
+            break;
+          case "event": {
+            const signal = n.eventMode === "signal";
+            fields = `<label>事件方式</label><select data-prop="eventMode"><option value="signal" ${signal ? "selected" : ""}>自定义事件 · 自动生成 SO</option><option value="binding" ${!signal ? "selected" : ""}>调用已有 Unity 能力</option></select>`;
+            if (signal) {
+              fields += `<label>事件标识</label><input data-prop="eventId" value="${esc(n.eventId)}"><p class="hint">英文字母开头，可用数字和下划线。同一剧情里相同标识代表同一事件。</p><label>事件名称</label><input data-prop="eventTitle" value="${esc(n.eventTitle)}"><label>参数类型</label><select data-prop="eventValueKind">${Object.entries(
+                typeTitles,
+              )
+                .map(
+                  ([key, title]) =>
+                    `<option value="${key}" ${key === n.eventValueKind ? "selected" : ""}>${title}</option>`,
+                )
+                .join(
+                  "",
+                )}</select><label>本次事件参数</label>${valueEditor(n.eventValueKind, n.value, 'data-prop="value"')}<div class="help-card" style="margin-top:13px">回填自动生成此剧情的事件 SO，播放到这里时广播事件。无需预先登记回调，可先完成剧情编排。SO 只定义与传递事件；实际发物品、开门等行为由接收方处理。已回填事件改变参数类型时请换一个事件标识。</div>`;
+            } else {
+              const event = catalog.events.find((e) => e.id === n.eventId);
+              fields += `<label>调用哪项 Unity 能力</label>${optionsSelect(catalog.events, n.eventId, 'data-prop="eventId"', "请选择已接入能力")}<div class="help-card" style="margin-top:13px">${esc(event?.help || "选择模板中已接好的方法")}</div>${event ? `<label>${esc(event.label || "参数")} · ${typeTitles[event.type]}</label>${valueEditor(event.type, n.value, 'data-prop="value"')}` : ""}`;
+            }
+            break;
+          }
+          case "sound":
+            fields = `<label>音频资源</label>${optionsSelect(catalog.audio, n.audio, 'data-prop="audio"', "请选择音效")}<label>音量 · 0 到 1</label><input type="number" min="0" max="1" step="0.1" data-prop="volume" value="${n.volume ?? 1}"><label class="row"><input type="checkbox" data-prop="wait" ${n.wait !== false ? "checked" : ""}> 等音频播放结束再继续</label>`;
+            break;
+        }
+        $("inspector").innerHTML =
+          `<div class="eyebrow">CARD / ${kinds[n.type]?.title}</div><div class="row"><h2 class="grow" style="margin:0;font-size:18px">卡片设置</h2>${doc.entry === n.id ? '<span class="entry-tag">▶ 开始卡片</span>' : ""}</div><p class="hint">${kinds[n.type]?.help || ""}</p><label>卡片名称 · 仅编辑时显示</label><input data-prop="title" value="${esc(n.title)}"><small>卡片标识：${esc(n.id)}</small><hr class="divider"><div class="field-group">${fields}</div>${!["choice", "condition", "end"].includes(n.type) ? `<hr class="divider"><label>后续剧情</label>${targetSelect(n.next, 'data-prop="next"')}` : ""}<hr class="divider"><div class="row"><button id="set-entry" class="ghost grow">设为开始</button><button id="duplicate-node" class="ghost">复制</button><button id="delete-node" class="ghost danger">删除</button></div>`;
+        bindLabels($("inspector"), "node-field");
+      }
+      $("inspector").addEventListener("input", (e) => {
+        const n = doc.nodes.find((n) => n.id === selected),
+          el = e.target;
+        if (!n) return;
+        const key = el.dataset.prop;
+        if (
+          !key &&
+          el.dataset.optionText === undefined &&
+          el.dataset.optionTarget === undefined
+        )
+          return;
+        delayedCheckpoint();
+        if (key) {
+          n[key] =
+            el.type === "checkbox"
+              ? el.checked
+              : ["seconds", "volume"].includes(key)
+                ? Number(el.value)
+                : el.value;
+          if (key === "actor") n.portrait = "";
+          if (key === "variable") {
+            const v = doc.variables.find((v) => v.key === n.variable);
+            n.value =
+              v?.type === "Boolean" ? "false" : v?.type === "String" ? "" : "0";
+            n.operation = "assign";
+            n.comparison = "eq";
+          }
+          if (key === "eventId" && n.eventMode !== "signal")
+            n.value =
+              catalog.events.find((v) => v.id === n.eventId)?.defaultValue ||
+              "";
+        }
+        if (key === "eventMode") {
+          n.eventId =
+            n.eventMode === "signal"
+              ? n.id
+              : catalog.events.find((item) => item.ready)?.id || "";
+          n.eventTitle = n.title;
+          n.eventValueKind = "String";
+          n.value =
+            n.eventMode === "signal"
+              ? ""
+              : catalog.events.find((item) => item.id === n.eventId)
+                  ?.defaultValue || "";
+        }
+        if (key === "eventValueKind")
+          n.value =
+            n.eventValueKind === "Boolean"
+              ? "false"
+              : ["Integer", "Float"].includes(n.eventValueKind)
+                ? "0"
+                : "";
+        if (el.dataset.optionText !== undefined)
+          n.options[Number(el.dataset.optionText)].text = el.value;
+        if (el.dataset.optionTarget !== undefined)
+          n.options[Number(el.dataset.optionTarget)].target = el.value;
+        changed();
+        renderGraph();
+        renderOutline();
+        if (
+          ["actor", "variable", "eventMode", "eventValueKind"].includes(key) ||
+          (key === "eventId" && n.eventMode !== "signal")
+        )
+          renderInspector();
+      });
+      $("inspector").addEventListener("click", (e) => {
+        const n = doc.nodes.find((n) => n.id === selected);
+        if (!n) return;
+        if (e.target.id === "set-entry") {
+          checkpoint();
+          doc.entry = n.id;
+          changed();
+          render();
+        }
+        if (e.target.id === "duplicate-node") {
+          insertCard(n);
+        }
+        if (e.target.id === "delete-node") {
+          removeCard(n.id);
+        }
+        if (e.target.id === "add-option") {
+          checkpoint();
+          if (n.options.length >= catalog.maxOptions)
+            return message(
+              "当前 Unity 选项界面最多支持 " + catalog.maxOptions + " 个选项",
+              true,
+            );
+          n.options.push({ text: "新的选项", target: "" });
+          changed();
+          render();
+        }
+        if (e.target.dataset.removeOption !== undefined) {
+          checkpoint();
+          n.options.splice(Number(e.target.dataset.removeOption), 1);
+          changed();
+          render();
+        }
+      });
+      function uniqueId(prefix) {
+        let i = 1;
+        while (doc.nodes.some((n) => n.id === prefix + "_" + i)) i++;
+        return prefix + "_" + i;
+      }
+      function addNode(type) {
+        checkpoint();
+        const id = uniqueId(type),
+          view = $("viewport"),
+          n = {
+            id,
+            title: kinds[type].title,
+            type,
+            x: Math.round(view.scrollLeft / zoom + 100),
+            y: Math.round(view.scrollTop / zoom + 135),
+            next: "",
+            options: [],
+            value: "0",
+            operation: "assign",
+            comparison: "eq",
+            seconds: 1,
+            volume: 1,
+            wait: true,
+          };
+        if (type === "say") {
+          n.actor = catalog.actors[0]?.id || "";
+          n.text = "在这里写对白。";
+        }
+        if (type === "choice")
+          n.options = [
+            { text: "选项一", target: "" },
+            { text: "选项二", target: "" },
+          ];
+        if (type === "event") {
+          n.eventMode = "signal";
+          n.eventId = id;
+          n.eventTitle = "新的事件";
+          n.eventValueKind = "String";
+          n.value = "";
+        }
+        if (type === "set" || type === "condition") {
+          n.variable = doc.variables[0]?.key || "";
+          n.value =
+            doc.variables[0]?.type === "Boolean"
+              ? "false"
+              : doc.variables[0]?.type === "String"
+                ? ""
+                : "0";
+        }
+        doc.nodes.push(n);
+        if (!doc.entry) doc.entry = n.id;
+        selected = id;
+        changed();
+        render();
+      }
+      $("node-tools").innerHTML = Object.entries(kinds)
+        .map(
+          ([key, k]) =>
+            `<button data-type="${key}"><span class="node-icon">${k.icon}</span>${k.title}</button>`,
+        )
+        .join("");
+      $("node-tools").onclick = (e) => {
+        const b = e.target.closest("[data-type]");
+        if (b) addNode(b.dataset.type);
+      };
+      function zoomTo(value) {
+        zoom = Math.max(0.45, Math.min(1.5, value));
+        $("stage").style.transform = `scale(${zoom})`;
+        $("stage-space").style.width = 3200 * zoom + "px";
+        $("stage-space").style.height = 2400 * zoom + "px";
+        $("zoom-label").textContent = Math.round(zoom * 100) + "%";
+        requestAnimationFrame(drawWires);
+      }
+      $("zoom-out").onclick = () => zoomTo(zoom - 0.1);
+      $("zoom-in").onclick = () => zoomTo(zoom + 0.1);
+      $("fit").onclick = () => selectNode(doc.entry, true);
+      $("undo").onclick = undo;
+      $("redo").onclick = redo;
+      let pickerRenameSlot = "";
+      function beginPickerRename() {
+        finishStoryRename(true);
+        const choice = $("unity-stories").value;
+        if (!choice.startsWith("draft:")) {
+          message("请先读取为本地剧情，再修改名称", true);
+          return;
+        }
+        const item = storyLibrary.items.find(
+          (item) => item.slot === choice.slice(6),
+        );
+        pickerRenameSlot = item.slot;
+        closeStoryPicker();
+        const input = $("story-choice-name");
+        input.value = item.doc.title;
+        input.readOnly = false;
+        input.focus();
+        input.select();
+      }
+      function finishPickerRename(commit) {
+        const input = $("story-choice-name");
+        if (input.readOnly) return;
+        const item = storyLibrary.items.find(
+          (item) => item.slot === pickerRenameSlot,
+        );
+        const title = input.value.trim();
+        input.readOnly = true;
+        if (commit && title && title !== item.doc.title) {
+          if (pickerRenameSlot === storyLibrary.active) {
+            checkpoint();
+            doc.title = title;
+            changed();
+          } else {
+            item.doc.title = title;
+            item.dirty = true;
+            saveDraft();
+          }
+        } else if (commit && !title) {
+          message("剧情名称不能为空", true);
+        }
+        pickerRenameSlot = "";
+        refreshStoryPicker();
+      }
+      function selectPickerStory(value) {
+        $("unity-stories").value = value;
+        $("story-choice-name").value =
+          $("unity-stories").selectedOptions[0].textContent;
+        for (const option of $("story-picker-list").querySelectorAll(
+          "[data-story]",
+        ))
+          option.setAttribute(
+            "aria-selected",
+            String(option.dataset.story === value),
+          );
+      }
+      function openStoryPicker() {
+        finishStoryRename(true);
+        finishPickerRename(true);
+        $("story-picker-list").hidden = false;
+        $("story-picker-toggle").setAttribute("aria-expanded", "true");
+        refreshStoryPicker();
+        $("story-picker-list").querySelector('[aria-selected="true"]')?.focus();
+      }
+      $("story-picker-toggle").onclick = () => {
+        if ($("story-picker-list").hidden) openStoryPicker();
+        else closeStoryPicker();
+      };
+      $("story-picker-list").onclick = (event) => {
+        const option = event.target.closest("[data-story]");
+        if (option) selectPickerStory(option.dataset.story);
+      };
+      $("story-picker-list").ondblclick = (event) => {
+        const option = event.target.closest("[data-story]");
+        if (!option) return;
+        selectPickerStory(option.dataset.story);
+        beginPickerRename();
+      };
+      $("story-picker-list").onkeydown = (event) => {
+        const options = [
+          ...$("story-picker-list").querySelectorAll("[data-story]"),
+        ];
+        const index = options.indexOf(event.target);
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+          event.preventDefault();
+          options[
+            (index + (event.key === "ArrowDown" ? 1 : options.length - 1)) %
+              options.length
+          ]?.focus();
+        } else if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          selectPickerStory(event.target.dataset.story);
+          closeStoryPicker();
+          $("story-choice-name").focus();
+        } else if (event.key === "F2") {
+          event.preventDefault();
+          selectPickerStory(event.target.dataset.story);
+          beginPickerRename();
+        } else if (event.key === "Escape") {
+          event.preventDefault();
+          closeStoryPicker();
+          $("story-picker-toggle").focus();
+        }
+      };
+      $("story-choice-name").ondblclick = beginPickerRename;
+      $("story-choice-name").onblur = () => finishPickerRename(true);
+      $("story-choice-name").onkeydown = (event) => {
+        if (
+          event.target.readOnly &&
+          (event.key === "F2" || event.key === "Enter")
+        ) {
+          event.preventDefault();
+          beginPickerRename();
+        } else if (event.target.readOnly && event.key === "ArrowDown") {
+          event.preventDefault();
+          openStoryPicker();
+        } else if (
+          !event.target.readOnly &&
+          (event.key === "Enter" || event.key === "Escape")
+        ) {
+          event.preventDefault();
+          finishPickerRename(event.key === "Enter");
+          event.target.blur();
+        }
+      };
+      document.addEventListener("pointerdown", (event) => {
+        if (!$("story-picker").contains(event.target)) closeStoryPicker();
+      });
+      $("story-picker").addEventListener("focusout", (event) => {
+        if (!$("story-picker").contains(event.relatedTarget))
+          closeStoryPicker();
+      });
+      function beginStoryRename() {
+        finishPickerRename(true);
+        $("story-title").readOnly = false;
+        $("story-title").focus();
+        $("story-title").select();
+      }
+      function finishStoryRename(commit) {
+        const input = $("story-title");
+        if (input.readOnly) return;
+        const title = input.value.trim();
+        input.readOnly = true;
+        if (commit && title && title !== doc.title) {
+          checkpoint();
+          doc.title = title;
+          changed();
+        } else if (commit && !title) {
+          message("剧情名称不能为空", true);
+        }
+        input.value = doc.title;
+      }
+      $("story-title").ondblclick = beginStoryRename;
+      $("rename-story").onclick = beginStoryRename;
+      $("story-title").onblur = () => finishStoryRename(true);
+      $("story-title").onkeydown = (event) => {
+        if (event.key === "F2" && event.target.readOnly) {
+          event.preventDefault();
+          beginStoryRename();
+        } else if (event.key === "Enter" || event.key === "Escape") {
+          event.preventDefault();
+          finishStoryRename(event.key === "Enter");
+          event.target.blur();
+        }
+      };
+      $("modal-close").onclick = () => $("modal").close();
+      window.addEventListener("keydown", (event) => {
+        const editing = editingText(event.target);
+        if (editing || $("modal").open) return;
+        if (event.key === "Escape") {
+          if (linking) {
+            event.preventDefault();
+            cancelLink();
+          }
+          return;
+        }
+        if (
+          event.key === "Delete" &&
+          graphSelectionActive &&
+          (cardShortcutScope(event) || linking) &&
+          !resizeState &&
+          !(
+            event.target instanceof Element &&
+            event.target.closest(".panel-divider")
+          )
+        ) {
+          event.preventDefault();
+          if (linking) {
+            cancelLink();
+            return;
+          }
+          finishNodeDrag();
+          if (selectedWire) disconnectSelection();
+          else removeCard(selected);
+          return;
+        }
+        if (event.ctrlKey || event.metaKey) {
+          if (event.key.toLowerCase() === "z") {
+            event.preventDefault();
+            finishGestures();
+            event.shiftKey ? redo() : undo();
+          }
+          if (event.key.toLowerCase() === "y") {
+            event.preventDefault();
+            finishGestures();
+            redo();
+          }
+        }
+      });
+      function checkDocument(data) {
+        const errors = [],
+          warnings = [],
+          id = /^[A-Za-z][A-Za-z0-9_]{0,63}$/;
+        if (data?.version !== 1) errors.push("version 必须为 1");
+        if (!id.test(data?.id || ""))
+          errors.push("剧情标识必须使用字母开头的字母、数字、下划线，最多64字");
+        if (!data?.title?.trim()) errors.push("请填写剧情标题");
+        if (
+          !Array.isArray(data?.nodes) ||
+          !data.nodes.length ||
+          data.nodes.length > 1000
+        )
+          return { errors: [...errors, "卡片数量必须为 1 到 1000"], warnings };
+        if (!Array.isArray(data.variables))
+          return { errors: [...errors, "缺少变量列表 variables"], warnings };
+        const nodeMap = new Map(),
+          varMap = new Map();
+        for (const v of data.variables) {
+          if (!v || !id.test(v.key || "") || varMap.has(v.key)) {
+            errors.push("变量标识格式错误或重复");
+            continue;
+          }
+          varMap.set(v.key, v);
+          if (!v.title?.trim()) errors.push(v.key + " 缺少中文名称");
+          if (!["Integer", "Float", "Boolean", "String"].includes(v.type))
+            errors.push("变量 " + v.key + " 只支持整数、小数、开关、文字");
+          checkValue(v.type, v.value, "变量 " + v.title, errors);
+        }
+        for (const n of data.nodes) {
+          if (!n || !id.test(n.id || "") || nodeMap.has(n.id)) {
+            errors.push("卡片标识格式错误或重复");
+            continue;
+          }
+          nodeMap.set(n.id, n);
+          if (!kinds[n.type]) errors.push(n.id + " 未知卡片类型");
+          if (!n.title?.trim()) errors.push(n.id + " 缺少名称");
+          if (!Number.isFinite(n.x) || !Number.isFinite(n.y))
+            errors.push(n.id + " 位置格式错误");
+        }
+        if (!nodeMap.has(data.entry)) errors.push("开始卡片不存在");
+        for (const n of nodeMap.values()) {
+          const name = "「" + n.title + "」";
+          for (const p of ports(n))
+            if (!nodeMap.has(p.target))
+              errors.push(name + " 的“" + p.label + "”尚未连接");
+          if (n.type === "say") {
+            if (!n.text?.trim()) errors.push(name + " 缺少对白");
+            const actor = catalog.actors.find((a) => a.id === n.actor);
+            if (connected && n.actor && !actor)
+              errors.push(name + " 角色不存在");
+            if (
+              connected &&
+              n.portrait &&
+              !actor?.portraits.some((p) => p.id === n.portrait)
+            )
+              errors.push(name + " 表情不属于所选角色");
+          }
+          if (
+            n.type === "choice" &&
+            (!Array.isArray(n.options) ||
+              n.options.length < 2 ||
+              n.options.length > catalog.maxOptions ||
+              n.options.some((o) => !o?.text?.trim()))
+          )
+            errors.push(name + " 至少需要两个非空选项");
+          if (["set", "condition"].includes(n.type)) {
+            const v = varMap.get(n.variable);
+            if (!v) errors.push(name + " 变量不存在");
+            else {
+              checkValue(v.type, n.value, name, errors);
+              const numeric = ["Integer", "Float"].includes(v.type);
+              if (
+                n.type === "set" &&
+                !["assign", ...(numeric ? ["add", "subtract"] : [])].includes(
+                  n.operation || "assign",
+                )
+              )
+                errors.push(name + " 不支持此修改方式");
+              if (
+                n.type === "condition" &&
+                ![
+                  "eq",
+                  "neq",
+                  ...(numeric ? ["gt", "gte", "lt", "lte"] : []),
+                ].includes(n.comparison || "eq")
+              )
+                errors.push(name + " 不支持此比较方式");
+            }
+          }
+          if (
+            n.type === "wait" &&
+            (!Number.isFinite(n.seconds) || n.seconds < 0 || n.seconds > 3600)
+          )
+            errors.push(name + " 等待秒数不在0到3600内");
+          if (n.type === "event") {
+            if (n.eventMode === "signal") {
+              if (!id.test(n.eventId || ""))
+                errors.push(name + " 事件标识格式错误");
+              if (!n.eventTitle?.trim()) errors.push(name + " 缺少事件名称");
+              checkValue(n.eventValueKind, n.value, name, errors);
+              const previous = data.nodes.find(
+                (item) =>
+                  item !== n &&
+                  item.type === "event" &&
+                  item.eventMode === "signal" &&
+                  item.eventId === n.eventId,
+              );
+              if (
+                previous &&
+                (previous.eventTitle !== n.eventTitle ||
+                  previous.eventValueKind !== n.eventValueKind)
+              )
+                errors.push(name + " 同一事件标识的名称与类型必须一致");
+            } else if (n.eventMode == null || n.eventMode === "binding") {
+              const ev = catalog.events.find((e) => e.id === n.eventId);
+              if (!ev) errors.push(name + " Unity 能力未登记");
+              else {
+                if (!ev.ready) errors.push(name + " Unity 能力尚未绑定");
+                checkValue(ev.type, n.value, name, errors);
+              }
+            } else errors.push(name + " 未知事件方式");
+          }
+          if (
+            n.type === "sound" &&
+            (!n.audio ||
+              (connected && !catalog.audio.some((a) => a.id === n.audio)))
+          )
+            errors.push(name + " 音频不存在");
+          if (
+            n.type === "sound" &&
+            (!Number.isFinite(n.volume) || n.volume < 0 || n.volume > 1)
+          )
+            errors.push(name + " 音量须为0到1");
+          if (
+            connected &&
+            n.voice &&
+            !catalog.audio.some((a) => a.id === n.voice)
+          )
+            errors.push(name + " 配音不存在");
+        }
+        const reached = new Set(),
+          queue = [data.entry];
+        while (queue.length) {
+          const current = queue.pop();
+          if (reached.has(current) || !nodeMap.has(current)) continue;
+          reached.add(current);
+          queue.push(...ports(nodeMap.get(current)).map((p) => p.target));
+        }
+        for (const n of nodeMap.values())
+          if (!reached.has(n.id))
+            warnings.push("无法从开始卡片到达「" + n.title + "」");
+        if (!connected)
+          warnings.push("当前离线：资源、选项上限及事件最终以 Unity 校验为准");
+        return { errors, warnings };
+      }
+      function checkValue(type, value, name, errors) {
+        let ok = true;
+        switch (type) {
+          case "None":
+            ok = value == null || value === "";
+            break;
+          case "String":
+            ok = typeof value === "string";
+            break;
+          case "Boolean":
+            ok = value === "true" || value === "false";
+            break;
+          case "Integer":
+            ok =
+              typeof value === "string" &&
+              /^[+-]?\d+$/.test(value) &&
+              Number(value) >= -2147483648 &&
+              Number(value) <= 2147483647;
+            break;
+          case "Float":
+            ok =
+              typeof value === "string" &&
+              /^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/.test(
+                value.trim(),
+              ) &&
+              Number.isFinite(Number(value)) &&
+              Math.abs(Number(value)) <= 3.4028234663852886e38;
+            break;
+          default:
+            ok = false;
+        }
+        if (!ok)
+          errors.push(
+            name +
+              " 参数应为" +
+              (typeTitles[type] || type) +
+              "，当前为 " +
+              value,
+          );
+      }
+      $("validate").onclick = run(async () => {
+        const result = checkDocument(doc);
+        if (!result.errors.length && connected) {
+          const server = await api("validate", doc);
+          result.warnings = server.warnings;
+        }
+        showModal(
+          "剧情检查",
+          `<div id="issues" class="${result.errors.length ? "check-bad" : "check-ok"}">${esc(result.errors.length ? result.errors.join("\n") : "✓ 卡片与参数检查通过")}${result.warnings.length ? "\n\n提醒：\n" + esc(result.warnings.join("\n")) : ""}</div><p class="hint">检查不执行游戏事件，也不改动 Unity 资产。</p>`,
+        );
+      });
+      $("push").onclick = run(async () => {
+        if (writing) return;
+        if (!connected) throw new Error("请从 Unity 菜单打开本页面以连接工程");
+        const result = checkDocument(doc);
+        if (result.errors.length) {
+          message(result.errors[0], true);
+          return;
+        }
+        const submitted = JSON.stringify(doc),
+          submittedId = doc.id,
+          submittedSlot = storyLibrary.active;
+        writing = true;
+        $("push").disabled = true;
+        try {
+          const response = await api("import", {
+            document: JSON.parse(submitted),
+            revision,
+          });
+          knownRevisions.set(
+            revisionKey(submittedId, submittedSlot),
+            response.revision,
+          );
+          const savedItem = storyLibrary.items.find(
+            (item) => item.slot === submittedSlot,
+          );
+          if (savedItem?.doc.id === submittedId) {
+            savedItem.revision = response.revision;
+            savedItem.dirty = JSON.stringify(savedItem.doc) !== submitted;
+          }
+          if (storyLibrary.active === submittedSlot && doc.id === submittedId) {
+            revision = response.revision;
+            dirty = JSON.stringify(doc) !== submitted;
+          }
+          saveDraft();
+          $("sync-state").textContent = dirty
+            ? "已提交旧版本 · 新编辑待回填"
+            : "与 Unity 回填版本一致";
+          message(
+            "已生成 " + response.nodes + " 张剧情卡片：" + response.assetPath,
+          );
+          await refreshCatalog(false);
+          showModal(
+            "已回填 Unity",
+            `<div class="help-card">${esc(response.assetPath)}${response.eventAssetPath ? `<br>事件 SO：${esc(response.eventAssetPath)}` : ""}<br>已生成 ${response.nodes} 个真实 Amanita Block，卡片位置与分支连接均已写入。</div><p class="hint">把预制体拖入你要使用的场景，Play 即可播放。回填会重建本工具生成的预制体，请在剧情模板里调整界面与事件绑定。Unity 内直接改动的命令不会反向同步到网页。</p>${response.warnings.length ? `<div id="issues">${esc(response.warnings.join("\n"))}</div>` : ""}<div class="modal-footer"><button id="locate-asset" class="primary">在 Unity 中定位资产</button></div>`,
+          );
+          $("locate-asset").onclick = run(async () => {
+            await api("select", { id: submittedId });
+            message("已在 Unity Project 中选中剧情预制体");
+          });
+        } finally {
+          writing = false;
+          $("push").disabled = false;
+        }
+      });
+      async function refreshCatalog(notify = true) {
+        catalog = await api("catalog");
+        connected = true;
+        $("connection").textContent = "● Unity 已连接";
+        $("connection").className = "badge live";
+        refreshStoryOptions();
+        render();
+        if (notify) message("已连接工程：" + catalog.project);
+      }
+      $("pull").onclick = run(async () => {
+        const choice = $("unity-stories").value;
+        if (choice.startsWith("unity:")) await loadUnityStory(choice.slice(6));
+        else if (choice.startsWith("draft:")) {
+          const item = storyLibrary.items.find(
+            (item) => item.slot === choice.slice(6),
+          );
+          activateStory(item, item.slot);
+          message("已读取本地剧情");
+        } else if (choice.startsWith("trash:")) {
+          const item = storyLibrary.trash.find(
+            (item) => item.slot === choice.slice(6),
+          );
+          storyLibrary.trash = storyLibrary.trash.filter(
+            (entry) => entry !== item,
+          );
+          activateStory(item, item.slot);
+          message("已恢复并读取本地剧情");
+        }
+      });
+      $("export").onclick = () => {
+        const blob = new Blob([JSON.stringify(doc, null, 2)], {
+            type: "application/json",
+          }),
+          url = URL.createObjectURL(blob),
+          a = document.createElement("a");
+        a.href = url;
+        a.download = (doc.id || "story") + ".json";
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        message("JSON 已导出，包含完整卡片与连线");
+      };
+      function applyDocument(data) {
+        const result = checkDocument(data);
+        if (result.errors.length) throw new Error(result.errors.join("\n"));
+        activateStory({
+          doc: data,
+          revision: data.id === doc.id ? revision : "",
+          selected: data.entry,
+          dirty: true,
+        });
+        message(
+          "已载入 " +
+            doc.nodes.length +
+            " 张卡片；回填前请检查 Unity 中是否有同名版本",
+        );
+      }
+      $("file-import").onclick = () => $("json-file").click();
+      $("json-file").onchange = run(async () => {
+        const file = $("json-file").files[0];
+        if (!file) return;
+        try {
+          const text = await file.text();
+          if (text.length > 4 * 1024 * 1024) throw new Error("JSON 超过4MB");
+          const data = JSON.parse(text);
+          const result = checkDocument(data);
+          if (result.errors.length) throw new Error(result.errors.join("\n"));
+          showModal(
+            "导入剧情 JSON",
+            `<p>将载入「${esc(data.title)}」，共 ${data.nodes.length} 张卡片。</p><p class="hint">将新建独立草稿，现有剧情保留在剧情管理列表。导入文件不会立即修改 Unity。</p><div class="modal-footer"><button id="confirm-json" class="primary">载入为草稿</button></div>`,
+          );
+          $("confirm-json").onclick = run(() => applyDocument(data));
+        } finally {
+          $("json-file").value = "";
+        }
+      });
+      function emptyStory() {
+        return {
+          version: 1,
+          id: "story_" + crypto.randomUUID().replaceAll("-", ""),
+          title: "新的剧情",
+          entry: "",
+          variables: [],
+          nodes: [],
+        };
+      }
+      function newStory() {
+        activateStory({ doc: emptyStory(), dirty: true });
+        message("已新建独立剧情，可以添加或粘贴卡片");
+      }
+      $("new-story").onclick = newStory;
+      $("variables").onclick = () => {
+        let working = clone(doc.variables);
+        const draw = () => {
+          showModal(
+            "剧情变量",
+            `<p class="hint">策划填写中文名称。标识用于变量插值与程序识别；被卡片引用后修改标识，需要同步调整引用。</p><div class="variable-grid muted"><span>变量标识</span><span>中文名称</span><span>类型</span><span>初始值</span><span></span></div><div id="variable-rows">${working.map((v, i) => `<div class="variable-grid" data-index="${i}"><input data-var="key" aria-label="变量标识" value="${esc(v.key)}"><input data-var="title" aria-label="变量中文名称" value="${esc(v.title)}"><select data-var="type" aria-label="变量类型">${["Integer", "Float", "Boolean", "String"].map((t) => `<option value="${t}" ${t === v.type ? "selected" : ""}>${typeTitles[t]}</option>`).join("")}</select>${valueEditor(v.type, v.value, 'data-var="value" aria-label="变量初始值"')}<button data-remove-var="${i}" class="ghost danger">×</button></div>`).join("")}</div><p class="hint">初始值在每次从头播放时恢复；游戏事件产生的外部效果不会自动回滚。</p><div class="modal-footer"><button id="add-variable">＋ 新增变量</button><button id="save-variables" class="primary">应用变量</button></div>`,
+          );
+          $("variable-rows").oninput = (e) => {
+            const row = e.target.closest("[data-index]");
+            if (!row) return;
+            const v = working[Number(row.dataset.index)],
+              key = e.target.dataset.var;
+            if (!key) return;
+            v[key] = e.target.value;
+            if (key === "type") {
+              v.value =
+                v.type === "Boolean" ? "false" : v.type === "String" ? "" : "0";
+              draw();
+            }
+          };
+          $("variable-rows").onclick = (e) => {
+            if (e.target.dataset.removeVar !== undefined) {
+              working.splice(Number(e.target.dataset.removeVar), 1);
+              draw();
+            }
+          };
+          $("add-variable").onclick = () => {
+            let i = 1;
+            while (working.some((v) => v.key === "Value" + i)) i++;
+            working.push({
+              key: "Value" + i,
+              title: "新的变量",
+              type: "Integer",
+              value: "0",
+            });
+            draw();
+          };
+          $("save-variables").onclick = run(() => {
+            const candidate = { ...doc, variables: working },
+              result = checkDocument(candidate);
+            const relevant = result.errors.filter((v) => v.startsWith("变量"));
+            if (relevant.length) throw new Error(relevant[0]);
+            checkpoint();
+            doc.variables = working;
+            changed();
+            render();
+            $("modal").close();
+          });
+        };
+        draw();
+      };
+      function aiPrompt() {
+        return `请为 Amanita 网页剧情工作台生成 JSON。只输出合法 JSON，不要解释或代码块。不要生成 C# 或 Lua。可定义signal自定义事件，不能杜撰binding能力或资源。\n格式版本1。所有变量初始值、set/condition/event 的 value 都是字符串，Boolean 只能为 "true" 或 "false"。所有 id 使用英文字母开头的字母数字下划线，最多64字。每个非结束卡片必须连接后续。允许循环。\n文档字段仅允许 version,id,title,entry,variables,nodes。变量字段仅允许 key,title,type,value；type 为 Integer/Float/Boolean/String。\n卡片公共字段 id,title,type,x,y；支持类型与字段：\nsay: actor(可空旁白),portrait(可空GUID),text,voice(可空音频GUID),next\nchoice: options:[{text,target}]，至少2个且最多${catalog.maxOptions}个\ncondition: variable,comparison(eq/neq/gt/gte/lt/lte),value,onTrue,onFalse\nset: variable,operation(assign/add/subtract),value,next\nwait: seconds(0..3600),next\nevent: eventMode(signal/binding),eventId,eventTitle,eventValueKind(None/String/Integer/Float/Boolean),value,next。自定义事件使用signal并填写名称和类型 无需在能力目录中登记 相同eventId的名称类型须一致。binding调用目录已有能力 旧数据缺少eventMode时按binding处理\nsound: audio(GUID),volume(0..1),wait(布尔),next\nend: 不需要后续\n文字和开关变量只支持eq/neq与assign。角色/表情/音频和binding能力只使用以下目录，ready=false的能力不能使用。signal事件可自行定义，广播不等于自动实现玩法。\n${JSON.stringify({ actors: catalog.actors, events: catalog.events, audio: catalog.audio })}\n布局坐标x范围60..2900，y范围80..2100，卡片宽218，避免重叠。对白变量插值例 {$Trust}。\n完整格式示例：\n${JSON.stringify(demo)}\n我的剧情需求：\n[在这里填写剧情、人物关系和分支结果]`;
+      }
+      $("ai").onclick = () => {
+        showModal(
+          "AI 辅助编写 · 结构化导入",
+          `<div class="help-card">① 复制带能力目录的提示词，交给你使用的 AI<br>② 把 AI 返回的 JSON 粘贴回来<br>③ 检查通过后载入草稿，审阅并回填 Unity</div><p class="hint">本工具不连接在线模型，也不上传工程。自然语言由 AI 写成规范数据，Unity 用确定规则校验和导入。</p><div class="row"><button id="copy-prompt">复制 AI 提示词与能力目录</button><span class="muted">可用现有 AI，不需要额外密钥</span></div><label>AI 返回的剧情 JSON</label><textarea id="ai-json" class="code" placeholder="粘贴 JSON，或单个 JSON 代码块"></textarea><div id="ai-result" class="hint"></div><div class="modal-footer"><button id="validate-ai">检查 JSON</button><button id="apply-ai" class="primary" disabled>载入为草稿</button></div>`,
+        );
+        let parsed = null;
+        $("copy-prompt").onclick = run(async () => {
+          await navigator.clipboard.writeText(aiPrompt());
+          message("提示词已复制，包含当前能力目录与完整数据格式");
+        });
+        $("ai-json").oninput = () => {
+          parsed = null;
+          $("apply-ai").disabled = true;
+        };
+        $("validate-ai").onclick = run(async () => {
+          const submittedText = $("ai-json").value;
+          let text = submittedText.trim();
+          if (text.startsWith("```"))
+            text = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+          const data = JSON.parse(text),
+            result = checkDocument(data);
+          if (result.errors.length) {
+            $("ai-result").textContent = result.errors.join("\n");
+            throw new Error(result.errors[0]);
+          }
+          if (connected) await api("validate", data);
+          if ($("ai-json").value !== submittedText)
+            throw new Error("JSON 已在检查期间修改，请重新检查当前内容");
+          parsed = data;
+          $("apply-ai").disabled = false;
+          $("ai-result").textContent =
+            "✓ 数据检查通过 · " +
+            data.nodes.length +
+            " 张卡片。载入将新建草稿，现有剧情保留在剧情管理列表。";
+        });
+        $("apply-ai").onclick = run(() => applyDocument(parsed));
+      };
+      const previewHistoryLimit = 200;
+      const previewStepBudget = 200;
+      function stopPreview() {
+        if (simulation) clearTimeout(simulation.timer);
+        simulation = null;
+        $("modal").classList.remove("preview-modal");
+      }
+      function cancelPreviewTimer() {
+        clearTimeout(simulation.timer);
+        simulation.timer = null;
+        simulation.generation++;
+      }
+      function schedulePreview(action, milliseconds) {
+        const state = simulation,
+          generation = state.generation;
+        state.timer = setTimeout(() => {
+          if (
+            simulation !== state ||
+            state.generation !== generation ||
+            !$("modal").open
+          )
+            return;
+          state.timer = null;
+          action();
+        }, milliseconds);
+      }
+      function startPreview() {
+        const result = checkDocument(doc);
+        if (result.errors.length)
+          return message("试读前请修复：" + result.errors[0], true);
+        showModal(
+          "试读 · " + doc.title,
+          `<div class="preview-label">模拟剧情与变量 · 事件和音效仅记录轨迹，实际表现请在 Unity 验收</div><div class="preview-toolbar"><button id="preview-back">← 上一步</button><button id="restart-preview">从头开始</button><button id="preview-auto">▶ 自动播放</button><select id="preview-speed" aria-label="试读文字速度"><option value="20">慢速文字</option><option value="40" selected>标准文字</option><option value="80">快速文字</option><option value="0">立即显示</option></select><label><input type="checkbox" id="preview-real-wait" checked>按实际时间等待</label></div><div class="preview-layout"><div class="preview-stage"><div class="preview-title" id="preview-progress"></div><div class="preview-actor" id="preview-actor"></div><div class="preview-text" id="preview-text" tabindex="0"></div><div class="preview-actions" id="preview-actions"></div></div><div class="preview-data"><h3>本轮变量</h3><p class="hint">可临时调整以测试分支，不改动剧情初始配置。</p><div id="preview-vars"></div><h3>执行轨迹</h3><div class="preview-log" id="preview-log"></div></div></div>`,
+        );
+        $("modal").classList.add("preview-modal");
+        simulation = {
+          document: clone(doc),
+          node: doc.entry,
+          values: Object.fromEntries(
+            doc.variables.map((variable) => [
+              variable.key,
+              parseValue(variable.type, variable.value),
+            ]),
+          ),
+          log: [],
+          history: [],
+          view: null,
+          next: null,
+          ended: false,
+          auto: false,
+          speed: 40,
+          realWait: true,
+          timer: null,
+          generation: 0,
+          sequence: 0,
+          chain: [],
+          typing: false,
+        };
+        $("restart-preview").onclick = startPreview;
+        $("preview-back").onclick = () => {
+          if (!simulation.history.length) return;
+          cancelPreviewTimer();
+          Object.assign(simulation, simulation.history.pop());
+          simulation.auto = false;
+          renderPreview();
+        };
+        $("preview-auto").onclick = () => {
+          simulation.auto = !simulation.auto;
+          $("preview-auto").textContent = simulation.auto
+            ? "Ⅱ 暂停自动"
+            : "▶ 自动播放";
+          if (!simulation.typing) {
+            cancelPreviewTimer();
+            schedulePreviewAdvance();
+          }
+        };
+        $("preview-speed").onchange = () => {
+          simulation.speed = Number($("preview-speed").value);
+          renderPreview();
+        };
+        $("preview-real-wait").onchange = () => {
+          simulation.realWait = $("preview-real-wait").checked;
+          renderPreview();
+        };
+        $("preview-vars").onchange = (event) => {
+          const key = event.target.dataset.previewVariable;
+          if (!key) return;
+          const variable = simulation.document.variables.find(
+            (item) => item.key === key,
+          );
+          const errors = [];
+          checkValue(variable.type, event.target.value, variable.title, errors);
+          if (errors.length) {
+            message(errors[0], true);
+            renderPreviewVariables();
+            return;
+          }
+          rememberPreview();
+          simulation.values[key] = parseValue(
+            variable.type,
+            event.target.value,
+          );
+          recordPreview(
+            "手动调整 " + variable.title + " = " + previewVariableText(key),
+          );
+          renderPreviewVariables();
+        };
+        visitPreview(doc.entry);
+        $("preview-text").focus({ preventScroll: true });
+      }
+      function parseValue(type, value) {
+        return type === "Boolean"
+          ? value === "true"
+          : type === "Float"
+            ? Math.fround(Number(value))
+            : type === "Integer"
+              ? Number(value)
+              : value;
+      }
+      function substitute(text) {
+        return String(text).replace(/\{\$(\w+)\}/g, (all, key) =>
+          Object.hasOwn(simulation.values, key)
+            ? previewVariableText(key)
+            : all,
+        );
+      }
+      function previewVariableText(key) {
+        const value = simulation.values[key];
+        const type = simulation.document.variables.find(
+          (variable) => variable.key === key,
+        ).type;
+        if (type === "Boolean") return value ? "True" : "False";
+        if (type === "Float" && Number.isFinite(value))
+          return String(Number(value.toPrecision(7)));
+        return String(value);
+      }
+      function recordPreview(text) {
+        simulation.log.push(text);
+        if (simulation.log.length > previewHistoryLimit) simulation.log.shift();
+        $("preview-log").textContent = simulation.log.join("\n");
+        $("preview-log").scrollTop = $("preview-log").scrollHeight;
+      }
+      function rememberPreview() {
+        const state = simulation;
+        state.history.push(
+          clone({
+            node: state.node,
+            values: state.values,
+            log: state.log,
+            view: state.view,
+            next: state.next,
+            ended: state.ended,
+            sequence: state.sequence,
+            chain: state.chain,
+          }),
+        );
+        if (state.history.length > previewHistoryLimit) state.history.shift();
+        $("preview-back").disabled = false;
+      }
+      function movePreview(target) {
+        if (simulation.typing) {
+          completePreviewText();
+          return;
+        }
+        if (!target) return;
+        rememberPreview();
+        visitPreview(target);
+      }
+      function visitPreview(id) {
+        cancelPreviewTimer();
+        const state = simulation;
+        const node = state.document.nodes.find((item) => item.id === id);
+        if (!node) throw new Error("试读卡片不存在 " + id);
+        state.node = id;
+        state.sequence++;
+        state.next = node.next || null;
+        state.ended = node.type === "end";
+        state.view = {
+          type: node.type,
+          title: node.title,
+          actor: "",
+          text: "",
+          options: [],
+          seconds: node.seconds || 0,
+        };
+        if (
+          ["say", "choice", "end"].includes(node.type) ||
+          (node.type === "wait" && state.realWait && node.seconds > 0)
+        )
+          state.chain = [];
+        else {
+          const signature = id + ":" + JSON.stringify(state.values);
+          if (
+            state.chain.includes(signature) ||
+            state.chain.length >= previewStepBudget
+          ) {
+            const repeated = state.chain.includes(signature);
+            state.auto = false;
+            state.next = id;
+            state.chain = [];
+            state.view.type = "checkpoint";
+            state.view.text = repeated
+              ? "卡片和变量状态重复，试读已暂停。可调整变量后继续检查。"
+              : "已连续执行 200 步，试读已暂停。点击继续可检查后续剧情。";
+            recordPreview("暂停检查 · " + node.title);
+            renderPreview();
+            return;
+          }
+          state.chain.push(signature);
+        }
+        if (node.type === "say") {
+          state.view.actor =
+            catalog.actors.find((actor) => actor.id === node.actor)?.title ||
+            "旁白";
+          state.view.text = substitute(node.text);
+          recordPreview("对白 · " + node.title);
+        } else if (node.type === "choice") {
+          state.next = null;
+          state.view.text = "请选择接下来的行动";
+          state.view.options = node.options.map((option) => ({
+            text: substitute(option.text),
+            target: option.target,
+          }));
+          recordPreview("等待选择 · " + node.title);
+        } else if (node.type === "set") {
+          const variable = state.document.variables.find(
+            (item) => item.key === node.variable,
+          );
+          const value = parseValue(
+            variable.type,
+            variable.type === "String" ? substitute(node.value) : node.value,
+          );
+          state.values[node.variable] =
+            node.operation === "add"
+              ? state.values[node.variable] + value
+              : node.operation === "subtract"
+                ? state.values[node.variable] - value
+                : value;
+          if (variable.type === "Integer") state.values[node.variable] |= 0;
+          if (variable.type === "Float")
+            state.values[node.variable] = Math.fround(
+              state.values[node.variable],
+            );
+          state.view.text =
+            variable.title + " = " + previewVariableText(variable.key);
+          recordPreview("修改变量 · " + state.view.text);
+        } else if (node.type === "condition") {
+          const variable = state.document.variables.find(
+            (item) => item.key === node.variable,
+          );
+          const left = state.values[node.variable],
+            right = parseValue(
+              variable.type,
+              variable.type === "String" ? substitute(node.value) : node.value,
+            );
+          const pass = {
+            eq: () => left === right,
+            neq: () => left !== right,
+            gt: () => left > right,
+            gte: () => left >= right,
+            lt: () => left < right,
+            lte: () => left <= right,
+          }[node.comparison || "eq"]();
+          state.next = pass ? node.onTrue : node.onFalse;
+          state.view.text =
+            node.title + "：" + (pass ? "满足条件" : "不满足条件");
+          recordPreview("条件分支 · " + state.view.text);
+        } else if (node.type === "wait") {
+          state.view.text = "等待 " + node.seconds + " 秒";
+          recordPreview("等待 · " + node.seconds + " 秒");
+        } else if (node.type === "event") {
+          state.view.text =
+            "模拟事件：" +
+            (node.eventMode === "signal"
+              ? node.eventTitle
+              : catalog.events.find((item) => item.id === node.eventId)
+                  ?.title || node.eventId) +
+            "\n参数：" +
+            (node.value || "无");
+          recordPreview(state.view.text.replace("\n", " · "));
+        } else if (node.type === "sound") {
+          state.view.text =
+            "模拟音效：" +
+            (catalog.audio.find((item) => item.id === node.audio)?.title ||
+              node.audio);
+          recordPreview(state.view.text);
+        } else {
+          state.auto = false;
+          state.next = null;
+          state.view.text = "这段剧情已结束";
+          recordPreview("剧情结束");
+        }
+        renderPreview();
+      }
+      function renderPreviewVariables() {
+        $("preview-vars").innerHTML =
+          simulation.document.variables
+            .map(
+              (variable) =>
+                `<div class="preview-variable"><label>${esc(variable.title)}</label>${valueEditor(variable.type, String(simulation.values[variable.key]), `data-preview-variable="${esc(variable.key)}" aria-label="试读变量 ${esc(variable.title)}"`)}</div>`,
+            )
+            .join("") || '<p class="hint">本段没有剧情变量</p>';
+        $("preview-log").textContent = simulation.log.join("\n");
+      }
+      function renderPreview() {
+        cancelPreviewTimer();
+        const state = simulation;
+        $("preview-progress").textContent =
+          "第 " + state.sequence + " 步 · " + state.view.title;
+        $("preview-actor").textContent = state.view.actor;
+        $("preview-actions").innerHTML = "";
+        $("preview-text").textContent = state.view.text;
+        $("preview-back").disabled = !state.history.length;
+        $("preview-auto").textContent = state.auto
+          ? "Ⅱ 暂停自动"
+          : "▶ 自动播放";
+        $("preview-auto").disabled =
+          state.ended || (!state.next && !state.view.options.length);
+        state.typing = state.view.type === "say" && state.speed > 0;
+        for (const option of state.view.options)
+          previewButton(option.text, () => {
+            rememberPreview();
+            recordPreview("玩家选择 · " + option.text);
+            visitPreview(option.target);
+          });
+        if (state.next)
+          previewButton(
+            state.typing
+              ? "补全文字 / 空格"
+              : state.view.type === "wait"
+                ? "跳过等待 →"
+                : "继续 →",
+            () => movePreview(state.next),
+          );
+        renderPreviewVariables();
+        if (state.typing) {
+          const characters = Array.from(state.view.text),
+            started = performance.now();
+          const tick = () => {
+            const length = Math.min(
+              characters.length,
+              Math.floor(((performance.now() - started) * state.speed) / 1000),
+            );
+            $("preview-text").textContent = characters
+              .slice(0, length)
+              .join("");
+            if (length === characters.length) completePreviewText();
+            else schedulePreview(tick, 33);
+          };
+          $("preview-text").textContent = "";
+          schedulePreview(tick, 33);
+        } else schedulePreviewAdvance();
+      }
+      function completePreviewText() {
+        cancelPreviewTimer();
+        simulation.typing = false;
+        $("preview-text").textContent = simulation.view.text;
+        const button = $("preview-actions").querySelector("button");
+        if (button) button.textContent = "继续 →";
+        schedulePreviewAdvance();
+      }
+      function schedulePreviewAdvance() {
+        const state = simulation;
+        if (!state.next || state.ended) return;
+        if (state.view.type === "wait" && state.realWait)
+          schedulePreview(
+            () => movePreview(state.next),
+            state.view.seconds * 1000,
+          );
+        else if (state.auto)
+          schedulePreview(
+            () => movePreview(state.next),
+            state.view.type === "say" ? 1000 : 450,
+          );
+      }
+      function previewButton(text, action) {
+        const button = document.createElement("button");
+        button.textContent = text;
+        button.onclick = action;
+        $("preview-actions").appendChild(button);
+      }
+      $("modal").addEventListener("close", stopPreview);
+      $("modal").addEventListener("keydown", (event) => {
+        if (
+          simulation &&
+          !editingText(event.target) &&
+          !event.target.closest("button") &&
+          [" ", "Enter"].includes(event.key)
+        ) {
+          event.preventDefault();
+          movePreview(simulation.next);
+        }
+      });
+      $("preview").onclick = startPreview;
+
+      async function boot() {
+        try {
+          loadUiPreferences();
+          const raw = localStorage.getItem(draftKey);
+          if (raw) {
+            const saved = JSON.parse(raw);
+            if (saved.doc?.version === 1 && Array.isArray(saved.doc.nodes)) {
+              doc = saved.doc;
+              revision = saved.revision || "";
+              selected = saved.selected || doc.entry;
+              dirty = saved.dirty !== false;
+            }
+          }
+          const libraryRaw = localStorage.getItem(libraryKey);
+          if (libraryRaw) {
+            const savedLibrary = JSON.parse(libraryRaw);
+            if (!Array.isArray(savedLibrary.items))
+              throw new Error("本地剧情列表格式错误");
+            storyLibrary = savedLibrary;
+            const active = storyLibrary.items.find(
+              (item) => item.slot === storyLibrary.active,
+            );
+            if (!Array.isArray(active?.doc?.nodes))
+              throw new Error("本地剧情列表缺少当前剧情");
+            doc = active.doc;
+            revision = active.revision || "";
+            selected = active.selected || doc.entry;
+            dirty = active.dirty !== false;
+          }
+          const activeState = libraryRaw
+            ? storyLibrary.items.find(
+                (item) => item.slot === storyLibrary.active,
+              )
+            : { doc, revision, dirty };
+          for (const item of [
+            activeState,
+            ...storyLibrary.items,
+            ...(storyLibrary.trash || []),
+          ]) {
+            if (/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(item.doc.id)) continue;
+            const previousId = item.doc.id;
+            item.doc.id = "story_" + crypto.randomUUID().replaceAll("-", "");
+            if (!item.doc.title || item.doc.title === "新的剧情")
+              item.doc.title = previousId || "新的剧情";
+            item.revision = "";
+            item.dirty = true;
+          }
+          revision = activeState.revision;
+          dirty = activeState.dirty;
+          for (const item of storyLibrary.items)
+            if (item.revision)
+              knownRevisions.set(
+                revisionKey(item.doc.id, item.slot),
+                item.revision,
+              );
+          saveDraft();
+          if (revision) knownRevisions.set(revisionKey(doc.id), revision);
+        } catch (error) {
+          message("本地草稿读取失败：" + error.message, true);
+        }
+        render();
+        if (token) {
+          try {
+            await refreshCatalog(false);
+            message("Unity 已连接 · 草稿自动保存，可直接回填");
+          } catch (error) {
+            message("Unity 连接失败：" + error.message, true);
+          }
+        } else {
+          $("status").textContent =
+            "离线编辑可导出 JSON · 一键回填请从 Unity 菜单打开";
+        }
+        $("sync-state").textContent = dirty
+          ? "草稿已自动保存 · 待回填"
+          : "与 Unity 回填版本一致";
+        selectNode(selected, true, false);
+      }
+      window.addEventListener("resize", refreshLayout);
+      boot();
+    </script>
+  </body>
+</html>
