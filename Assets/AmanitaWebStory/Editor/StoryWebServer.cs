@@ -112,7 +112,7 @@ namespace AmanitaWebStory.Editor
             try
             {
                 ActiveLifetime?.Cancel();
-                ActiveListener?.Abort();
+                ActiveListener?.Close();
                 if (ActiveTask != null && !ActiveTask.Wait(ShutdownTimeout))
                     throw new TimeoutException("网页剧情服务停止超时 无法确认旧监听端口已释放");
             }

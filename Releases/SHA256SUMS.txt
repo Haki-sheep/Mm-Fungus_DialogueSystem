@@ -1,1 +1,2 @@
 f347480add776226f1e59ed2bab70161635a60f6888c8a492ca5de9825d49b2c  Mm-Fungus-DialogueSystem-v0.1.0.unitypackage
+4b69a7ad35ccaee23829517b564604a113f371687cb91da6efcd63c84905238d  Mm-Fungus-DialogueSystem-v0.1.1.unitypackage

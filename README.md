@@ -40,4 +40,6 @@ pwsh -File Assets/AmanitaWebStory/CLI/story.ps1 read -Id story_id
 
 完整命令为 `capabilities / list / read / validate / import / delete / audit / status`。更新和删除必须带 `read` 返回的 `-Revision`；删除进入回收目录。数据结构见随模块提供的 `CLI/story.schema.json`。运行中的 Unity 不接受回填和删除。
 
+服务启动后会在脚本编译重载结束时恢复同一网页地址；菜单手动停止后，重载不会重新启动服务。
+
 源码保留 Fungus 命名空间和已有资源 GUID；部分历史命令类名仍带 Lean/iTween 字样，执行已改成 PrimeTween，不含旧补间库。上游快照为 `71f7bea8e2d6842cefd8a84d47d9f86506637e6a`。Fungus 许可见 [LICENSE](Assets/Fungus/LICENSE.txt)，字体许可见 [OFL](Assets/AmanitaWebStory/Fonts/OFL.txt)，PrimeTween 包内保留其原始许可。
