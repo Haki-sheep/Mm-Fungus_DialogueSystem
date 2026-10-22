@@ -191,7 +191,7 @@
             "string",
             "null"
           ],
-          "description": "signal 创建事件 SO 无需模板登记 binding 调用 catalog.events 中已绑定事件 省略时为 binding"
+          "description": "仅支持 signal 播放时经 StoryPlayer.EventRaised 广播 省略时为 signal"
         },
         "eventTitle": {
           "type": [
@@ -466,10 +466,9 @@
         },
         "eventMode": {
           "enum": [
-            "signal",
-            "binding"
+            "signal"
           ],
-          "default": "binding"
+          "default": "signal"
         },
         "next": {
           "type": "string",

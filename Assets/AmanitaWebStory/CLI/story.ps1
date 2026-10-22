@@ -5,7 +5,6 @@ param(
     [string] $Id,
     [string] $File,
     [string] $Revision = '',
-    [string] $Path,
     [int] $TimeoutSeconds = 30,
     [switch] $Help
 )
@@ -22,7 +21,7 @@ try {
     if ($Help -or $Command -eq 'help') {
         Write-JsonResult @{
             protocolVersion = 1
-            usage = 'pwsh -File Assets/AmanitaWebStory/CLI/story.ps1 <command> [-ProjectPath <project>] [-Id <id>] [-File <json>] [-Revision <revision>] [-Path <asset path>] [-TimeoutSeconds 30]'
+            usage = 'pwsh -File Assets/AmanitaWebStory/CLI/story.ps1 <command> [-ProjectPath <project>] [-Id <id>] [-File <json>] [-Revision <revision>] [-TimeoutSeconds 30]'
             commands = @{
                 capabilities = '返回八类剧情卡片的 JSON Schema 与当前资源目录'
                 list = '列出 Unity 已回填剧情'
@@ -30,23 +29,22 @@ try {
                 validate = '-File UTF-8 剧情 JSON 只校验'
                 import = '-File UTF-8 剧情 JSON 新建时不填 Revision 更新时必须提供 read 返回的 Revision'
                 delete = '-Id 剧情标识 -Revision 当前版本 将剧情移入回收目录'
-                audit = '只读检查模板 默认 或 -Path Assets/AmanitaWebStory/Generated/id.prefab 的依赖与缺失引用'
+                audit = '-Id 剧情标识 只读检查剧情 SO 的角色 立绘 音频缺失引用与依赖'
                 status = '读取连接的工程与 Editor 状态 不返回令牌'
             }
-            prerequisite = '目标 Unity Editor 中启用 Tools/Fungus/打开网页剧情编辑器'
+            prerequisite = '目标 Unity Editor 中启用 Tools/MmFungus/打开网页剧情编辑器'
             schemaFile = (Join-Path $PSScriptRoot 'story.schema.json')
         }
         exit 0
     }
     if ($Command -notin $CommandList) { throw "未知命令 $Command" }
     if ($TimeoutSeconds -lt 1 -or $TimeoutSeconds -gt 300) { throw 'TimeoutSeconds 必须为 1 到 300' }
-    if ($Command -in @('read', 'delete') -and $Id -notmatch '^[A-Za-z][A-Za-z0-9_]{0,63}$') { throw '请提供有效的 -Id' }
+    if ($Command -in @('read', 'delete', 'audit') -and $Id -notmatch '^[A-Za-z][A-Za-z0-9_]{0,63}$') { throw '请提供有效的 -Id' }
     if ($Command -in @('validate', 'import') -and [string]::IsNullOrWhiteSpace($File)) { throw '请提供 -File 剧情 JSON 路径' }
     if ($Command -eq 'delete' -and [string]::IsNullOrWhiteSpace($Revision)) { throw '删除必须提供 -Revision 请先 read 获取当前版本' }
-    if ($PSBoundParameters.ContainsKey('Id') -and $Command -notin @('read', 'delete')) { throw '-Id 仅用于 read 和 delete' }
+    if ($PSBoundParameters.ContainsKey('Id') -and $Command -notin @('read', 'delete', 'audit')) { throw '-Id 仅用于 read delete 和 audit' }
     if ($PSBoundParameters.ContainsKey('File') -and $Command -notin @('validate', 'import')) { throw '-File 仅用于 validate 和 import' }
     if ($PSBoundParameters.ContainsKey('Revision') -and $Command -notin @('import', 'delete')) { throw '-Revision 仅用于 import 和 delete' }
-    if ($PSBoundParameters.ContainsKey('Path') -and $Command -ne 'audit') { throw '-Path 仅用于 audit' }
     if ([string]::IsNullOrWhiteSpace($ProjectPath)) {
         $ProjectPath = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
     }
@@ -67,7 +65,7 @@ try {
         'validate' { '/api/validate' }
         'import' { '/api/import' }
         'delete' { '/api/delete' }
-        'audit' { '/api/cli/audit' + $(if ($Path) { '?path=' + [uri]::EscapeDataString($Path) } else { '' }) }
+        'audit' { '/api/cli/audit?id=' + [uri]::EscapeDataString($Id) }
         default { '/api/cli/' + $Command }
     }
     $Request = @{

@@ -1129,7 +1129,7 @@
           title: "事件",
           icon: "⚑",
           color: "var(--tone-event)",
-          help: "填写固定格式的事件，回填自动生成事件 SO。也可调用已有 Unity 能力。",
+          help: "播放到这里时广播事件，由游戏代码订阅 StoryPlayer.EventRaised 处理。",
         },
         sound: {
           title: "播放音效",
@@ -1162,7 +1162,7 @@
           { id: "finish", title: "剧情结束", type: "end", x: 430, y: 130 }
         ]
       };
-      const offlineCatalog = { maxOptions: 6, actors: [], events: [], audio: [], stories: [] };
+      const offlineCatalog = { maxOptions: 6, actors: [], audio: [], stories: [] };
       const draftSlot =
         new URLSearchParams(location.hash.slice(1)).get("draft") || "";
       const draftKey =
@@ -1425,7 +1425,7 @@
           const item = catalog.stories.find((item) => item.id === id);
           showModal(
             "删除 Unity 剧情",
-            `<div class="help-card">${esc(item.title)} · ${esc(id)}<br>将把生成的预制体和事件 SO 移入 Unity 项目的 AmanitaWebStory/Trash 回收目录，保留本地草稿和资源 GUID。可在 Unity Project 中移回 Generated 恢复。</div><div class="modal-footer"><button class="danger" id="confirm-delete-story">删除这段 Unity 剧情</button></div>`,
+            `<div class="help-card">${esc(item.title)} · ${esc(id)}<br>将把生成的剧情 SO 移入 Unity 项目的 AmanitaWebStory/Trash 回收目录，保留本地草稿和资源 GUID。可在 Unity Project 中移回 Generated 恢复。</div><div class="modal-footer"><button class="danger" id="confirm-delete-story">删除这段 Unity 剧情</button></div>`,
           );
           $("confirm-delete-story").onclick = run(async () => {
             writing = true;
@@ -1451,7 +1451,7 @@
               await refreshCatalog(false);
               showModal(
                 "Unity 剧情已删除",
-                `<div class="help-card">已移入：${esc(result.trashPath)}</div><p class="hint">本地草稿仍可编辑；重新回填会生成新的 Unity 资产。恢复旧资产时，将回收目录里的预制体和 SO 移回 Generated，再读取 Unity 版本。</p>`,
+                `<div class="help-card">已移入：${esc(result.trashPath)}</div><p class="hint">本地草稿仍可编辑；重新回填会生成新的 Unity 资产。恢复旧资产时，将回收目录里的剧情 SO 移回 Generated，再读取 Unity 版本。</p>`,
               );
             } finally {
               writing = false;
@@ -1641,10 +1641,7 @@
             );
           case "event":
             return (
-              (node.eventMode === "signal"
-                ? node.eventTitle || "填写事件名称"
-                : catalog.events.find((e) => e.id === node.eventId)?.title ||
-                  "选择 Unity 能力") +
+              (node.eventTitle || "填写事件名称") +
               " · " +
               (node.value ?? "")
             );
@@ -2569,23 +2566,16 @@
             fields = `<label>等待秒数</label><input type="number" min="0" max="3600" step="0.1" data-prop="seconds" value="${esc(n.seconds)}"><p class="hint">单位为秒。暂停游戏时间时，等待也会暂停。</p>`;
             break;
           case "event": {
-            const signal = n.eventMode === "signal";
-            fields = `<label>事件方式</label><select data-prop="eventMode"><option value="signal" ${signal ? "selected" : ""}>自定义事件 · 自动生成 SO</option><option value="binding" ${!signal ? "selected" : ""}>调用已有 Unity 能力</option></select>`;
-            if (signal) {
-              fields += `<label>事件标识</label><input data-prop="eventId" value="${esc(n.eventId)}"><p class="hint">英文字母开头，可用数字和下划线。同一剧情里相同标识代表同一事件。</p><label>事件名称</label><input data-prop="eventTitle" value="${esc(n.eventTitle)}"><label>参数类型</label><select data-prop="eventValueKind">${Object.entries(
-                typeTitles,
+            fields = `<label>事件标识</label><input data-prop="eventId" value="${esc(n.eventId)}"><p class="hint">英文字母开头，可用数字和下划线。同一剧情里相同标识代表同一事件。</p><label>事件名称</label><input data-prop="eventTitle" value="${esc(n.eventTitle)}"><label>参数类型</label><select data-prop="eventValueKind">${Object.entries(
+              typeTitles,
+            )
+              .map(
+                ([key, title]) =>
+                  `<option value="${key}" ${key === n.eventValueKind ? "selected" : ""}>${title}</option>`,
               )
-                .map(
-                  ([key, title]) =>
-                    `<option value="${key}" ${key === n.eventValueKind ? "selected" : ""}>${title}</option>`,
-                )
-                .join(
-                  "",
-                )}</select><label>本次事件参数</label>${valueEditor(n.eventValueKind, n.value, 'data-prop="value"')}<div class="help-card" style="margin-top:13px">回填自动生成此剧情的事件 SO，播放到这里时广播事件。无需预先登记回调，可先完成剧情编排。SO 只定义与传递事件；实际发物品、开门等行为由接收方处理。已回填事件改变参数类型时请换一个事件标识。</div>`;
-            } else {
-              const event = catalog.events.find((e) => e.id === n.eventId);
-              fields += `<label>调用哪项 Unity 能力</label>${optionsSelect(catalog.events, n.eventId, 'data-prop="eventId"', "请选择已接入能力")}<div class="help-card" style="margin-top:13px">${esc(event?.help || "选择模板中已接好的方法")}</div>${event ? `<label>${esc(event.label || "参数")} · ${typeTitles[event.type]}</label>${valueEditor(event.type, n.value, 'data-prop="value"')}` : ""}`;
-            }
+              .join(
+                "",
+              )}</select><label>本次事件参数</label>${valueEditor(n.eventValueKind, n.value, 'data-prop="value"')}<div class="help-card" style="margin-top:13px">播放到这里时由 StoryPlayer.EventRaised 广播事件。剧情只传递事件标识和参数；发物品、开门等行为由订阅方实现。</div>`;
             break;
           }
           case "sound":
@@ -2623,23 +2613,6 @@
             n.operation = "assign";
             n.comparison = "eq";
           }
-          if (key === "eventId" && n.eventMode !== "signal")
-            n.value =
-              catalog.events.find((v) => v.id === n.eventId)?.defaultValue ||
-              "";
-        }
-        if (key === "eventMode") {
-          n.eventId =
-            n.eventMode === "signal"
-              ? n.id
-              : catalog.events.find((item) => item.ready)?.id || "";
-          n.eventTitle = n.title;
-          n.eventValueKind = "String";
-          n.value =
-            n.eventMode === "signal"
-              ? ""
-              : catalog.events.find((item) => item.id === n.eventId)
-                  ?.defaultValue || "";
         }
         if (key === "eventValueKind")
           n.value =
@@ -2656,8 +2629,7 @@
         renderGraph();
         renderOutline();
         if (
-          ["actor", "variable", "eventMode", "eventValueKind"].includes(key) ||
-          (key === "eventId" && n.eventMode !== "signal")
+          ["actor", "variable", "eventValueKind"].includes(key)
         )
           renderInspector();
       });
@@ -3094,14 +3066,7 @@
                   previous.eventValueKind !== n.eventValueKind)
               )
                 errors.push(name + " 同一事件标识的名称与类型必须一致");
-            } else if (n.eventMode == null || n.eventMode === "binding") {
-              const ev = catalog.events.find((e) => e.id === n.eventId);
-              if (!ev) errors.push(name + " Unity 能力未登记");
-              else {
-                if (!ev.ready) errors.push(name + " Unity 能力尚未绑定");
-                checkValue(ev.type, n.value, name, errors);
-              }
-            } else errors.push(name + " 未知事件方式");
+            } else errors.push(name + " 事件只支持自定义事件方式");
           }
           if (
             n.type === "sound" &&
@@ -3230,11 +3195,11 @@
           await refreshCatalog(false);
           showModal(
             "已回填 Unity",
-            `<div class="help-card">${esc(response.assetPath)}${response.eventAssetPath ? `<br>事件 SO：${esc(response.eventAssetPath)}` : ""}<br>已生成 ${response.nodes} 个真实 Amanita Block，卡片位置与分支连接均已写入。</div><p class="hint">把预制体拖入你要使用的场景，Play 即可播放。回填会重建本工具生成的预制体，请在剧情模板里调整界面与事件绑定。Unity 内直接改动的命令不会反向同步到网页。</p>${response.warnings.length ? `<div id="issues">${esc(response.warnings.join("\n"))}</div>` : ""}<div class="modal-footer"><button id="locate-asset" class="primary">在 Unity 中定位资产</button></div>`,
+            `<div class="help-card">${esc(response.assetPath)}<br>已生成 ${response.nodes} 个剧情步骤，分支连接与源数据均已写入剧情 SO。</div><p class="hint">把剧情 SO 拖到场景中 StoryPlayer 的剧情字段，Play 即可播放。回填会覆盖本工具生成的剧情 SO 内容并保留 GUID 与背景配置。事件由代码订阅 StoryPlayer.EventRaised 处理。</p>${response.warnings.length ? `<div id="issues">${esc(response.warnings.join("\n"))}</div>` : ""}<div class="modal-footer"><button id="locate-asset" class="primary">在 Unity 中定位资产</button></div>`,
           );
           $("locate-asset").onclick = run(async () => {
             await api("select", { id: submittedId });
-            message("已在 Unity Project 中选中剧情预制体");
+            message("已在 Unity Project 中选中剧情 SO");
           });
         } finally {
           writing = false;
@@ -3383,7 +3348,8 @@
         draw();
       };
       function aiPrompt() {
-        return `请为 Amanita 网页剧情工作台生成 JSON。只输出合法 JSON，不要解释或代码块。不要生成 C# 或 Lua。可定义signal自定义事件，不能杜撰binding能力或资源。\n格式版本1。所有变量初始值、set/condition/event 的 value 都是字符串，Boolean 只能为 "true" 或 "false"。所有 id 使用英文字母开头的字母数字下划线，最多64字。每个非结束卡片必须连接后续。允许循环。\n文档字段仅允许 version,id,title,entry,variables,nodes。变量字段仅允许 key,title,type,value；type 为 Integer/Float/Boolean/String。\n卡片公共字段 id,title,type,x,y；支持类型与字段：\nsay: actor(可空旁白),portrait(可空GUID),text,voice(可空音频GUID),next\nchoice: options:[{text,target}]，至少2个且最多${catalog.maxOptions}个\ncondition: variable,comparison(eq/neq/gt/gte/lt/lte),value,onTrue,onFalse\nset: variable,operation(assign/add/subtract),value,next\nwait: seconds(0..3600),next\nevent: eventMode(signal/binding),eventId,eventTitle,eventValueKind(None/String/Integer/Float/Boolean),value,next。自定义事件使用signal并填写名称和类型 无需在能力目录中登记 相同eventId的名称类型须一致。binding调用目录已有能力 旧数据缺少eventMode时按binding处理\nsound: audio(GUID),volume(0..1),wait(布尔),next\nend: 不需要后续\n文字和开关变量只支持eq/neq与assign。角色/表情/音频和binding能力只使用以下目录，ready=false的能力不能使用。signal事件可自行定义，广播不等于自动实现玩法。\n${JSON.stringify({ actors: catalog.actors, events: catalog.events, audio: catalog.audio })}\n布局坐标x范围60..2900，y范围80..2100，卡片宽218，避免重叠。对白变量插值例 {$Trust}。\n完整格式示例：\n${JSON.stringify(demo)}\n我的剧情需求：\n[在这里填写剧情、人物关系和分支结果]`;
+        return `请为 Amanita 网页剧情工作台生成 JSON。只输出合法 JSON，不要解释或代码块。不要生成 C# 或 Lua。事件只使用signal自定义事件，不能杜撰角色、表情或音频资源。\n格式版本1。所有变量初始值、set/condition/event 的 value 都是字符串，Boolean 只能为 "true" 或 "false"。所有 id 使用英文字母开头的字母数字下划线，最多64字。每个非结束卡片必须连接后续。允许循环。\n文档字段仅允许 version,id,title,entry,variables,nodes。变量字段仅允许 key,title,type,value；type 为 Integer/Float/Boolean/String。\n卡片公共字段 id,title,type,x,y；支持类型与字段：\nsay: actor(可空旁白),portrait(可空GUID),text,voice(可空音频GUID),next\nchoice: options:[{text,target}]，至少2个且最多${catalog.maxOptions}个\ncondition: variable,comparison(eq/neq/gt/gte/lt/lte),value,onTrue,onFalse\nset: variable,operation(assign/add/subtract),value,next\nwait: seconds(0..3600),next\nevent: eventMode(固定signal),eventId,eventTitle,eventValueKind(None/String/Integer/Float/Boolean),value,next。相同eventId的名称类型须一致\nsound: audio(GUID),volume(0..1),wait(布尔),next\nend: 不需要后续\n文字和开关变量只支持eq/neq与assign。角色/表情/音频只使用以下目录。事件广播不等于自动实现玩法。
+${JSON.stringify({ actors: catalog.actors, audio: catalog.audio })}\n布局坐标x范围60..2900，y范围80..2100，卡片宽218，避免重叠。对白变量插值例 {$Trust}。\n完整格式示例：\n${JSON.stringify(demo)}\n我的剧情需求：\n[在这里填写剧情、人物关系和分支结果]`;
       }
       $("ai").onclick = () => {
         showModal(
@@ -3695,10 +3661,7 @@
         } else if (node.type === "event") {
           state.view.text =
             "模拟事件：" +
-            (node.eventMode === "signal"
-              ? node.eventTitle
-              : catalog.events.find((item) => item.id === node.eventId)
-                  ?.title || node.eventId) +
+            (node.eventTitle || node.eventId) +
             "\n参数：" +
             (node.value || "无");
           recordPreview(state.view.text.replace("\n", " · "));
