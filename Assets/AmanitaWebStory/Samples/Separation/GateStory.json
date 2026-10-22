@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "id": "gate_sample",
+  "title": "城门通行",
+  "entry": "welcome",
+  "variables": [{ "key": "trust", "title": "守卫信任", "type": "Integer", "value": "0" }],
+  "nodes": [
+    { "id": "welcome", "title": "守卫问话", "type": "say", "x": 0, "y": 0, "text": "城门就要关闭了。你来这里有什么事？", "actor": "speaker", "next": "answer" },
+    { "id": "answer", "title": "玩家选择", "type": "choice", "x": 280, "y": 0, "options": [ { "text": "我是来送信的。", "target": "trust_guard" }, { "text": "只是路过，明天再来吧。", "target": "check" } ] },
+    { "id": "trust_guard", "title": "增加信任", "type": "set", "x": 560, "y": 0, "variable": "trust", "operation": "add", "value": "1", "next": "check" },
+    { "id": "check", "title": "判断信任", "type": "condition", "x": 840, "y": 0, "variable": "trust", "comparison": "gte", "value": "1", "onTrue": "permit", "onFalse": "leave" },
+    { "id": "permit", "title": "允许通行", "type": "event", "x": 1120, "y": 0, "eventMode": "signal", "eventId": "gate_opened", "eventTitle": "允许通行", "eventValueKind": "Integer", "value": "1", "next": "pause" },
+    { "id": "pause", "title": "开门等待", "type": "wait", "x": 1400, "y": 0, "seconds": 0.2, "next": "enter" },
+    { "id": "enter", "title": "欢迎入城", "type": "say", "x": 1680, "y": 0, "text": "原来是信使。请进，旅店就在城门右侧。\n当前信任：{$trust}", "actor": "speaker", "next": "end" },
+    { "id": "leave", "title": "明日再来", "type": "say", "x": 1120, "y": 260, "text": "好，路上小心。明天早上再来吧。", "actor": "speaker", "next": "end" },
+    { "id": "end", "title": "结束", "type": "end", "x": 1960, "y": 0 }
+  ]
+}
