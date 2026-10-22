@@ -8,7 +8,7 @@ namespace Fungus.EditorUtils
 {
     public class CameraMenuItems 
     {
-        [MenuItem("Tools/Amanita/创建/镜头位置", false, 100)]
+        [MenuItem("Tools/MmFungus/Fungus 原生/创建镜头位置", false, 140)]
         static void CreateView()
         {
             FlowchartMenuItems.SpawnPrefab("View");

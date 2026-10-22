@@ -10,55 +10,41 @@ namespace Fungus.EditorUtils
     public class NarrativeMenuItems 
     {
 
-        [MenuItem("Tools/Amanita/创建/角色", false, 50)]
+        [MenuItem("Tools/MmFungus/Fungus 原生/创建角色", false, 121)]
         static void CreateCharacter()
         {
             GameObject go = FlowchartMenuItems.SpawnPrefab("Character");
             go.transform.position = Vector3.zero;
         }
 
-        [MenuItem("Tools/Amanita/创建/对白界面", false, 51)]
+        [MenuItem("Tools/MmFungus/Fungus 原生/创建对白界面", false, 122)]
         static void CreateSayDialog()
         {
             GameObject go = FlowchartMenuItems.SpawnPrefab("SayDialog");
             go.transform.position = Vector3.zero;
         }
 
-        [MenuItem("Tools/Amanita/创建/选项界面", false, 52)]
+        [MenuItem("Tools/MmFungus/Fungus 原生/创建选项界面", false, 123)]
         static void CreateMenuDialog()
         {
             GameObject go = FlowchartMenuItems.SpawnPrefab("MenuDialog");
             go.transform.position = Vector3.zero;
         }
 
-        [MenuItem("Tools/Amanita/创建/文字标签", false, 53)]
-        static void CreateTag()
-        {
-            GameObject go = FlowchartMenuItems.SpawnPrefab("Tag");
-            go.transform.position = Vector3.zero;
-        }
-
-        [MenuItem("Tools/Amanita/创建/音频标签", false, 54)]
-        static void CreateAudioTag()
-        {
-            GameObject go = FlowchartMenuItems.SpawnPrefab("AudioTag");
-            go.transform.position = Vector3.zero;
-        }
-
-        [MenuItem("Tools/Amanita/创建/立绘舞台", false, 55)]
+        [MenuItem("Tools/MmFungus/Fungus 原生/创建立绘舞台", false, 130)]
         static void CreateStage()
         {
             GameObject go = FlowchartMenuItems.SpawnPrefab("Stage");
             go.transform.position = Vector3.zero;
         }
         
-        [MenuItem("Tools/Amanita/创建/立绘站位", false, 56)]
+        [MenuItem("Tools/MmFungus/Fungus 原生/创建立绘站位", false, 131)]
         static void CreateStagePosition()
         {
             FlowchartMenuItems.SpawnPrefab("StagePosition");
         }
 
-        [MenuItem("Tools/Amanita/创建/多语言翻译", false, 57)]
+        [MenuItem("Tools/MmFungus/Fungus 原生/创建多语言翻译", false, 150)]
         static void CreateLocalization()
         {
             GameObject go = FlowchartMenuItems.SpawnPrefab("Localization");

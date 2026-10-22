@@ -251,7 +251,7 @@ namespace Fungus.EditorUtils
             }
         }
 
-        [MenuItem("Tools/Amanita/剧情流程图")]
+        [MenuItem("Tools/MmFungus/Fungus 原生/流程图窗口", false, 100)]
         static void Init()
         {
             GetWindow(typeof(FlowchartWindow), false, "剧情流程图");

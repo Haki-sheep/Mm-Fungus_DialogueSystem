@@ -8,12 +8,7 @@ namespace Fungus.EditorUtils
 {
     public class FlowchartMenuItems
     {
-        [MenuItem("Tools/Amanita/工具/说明文字")]
-        private static void SpawnInfoText()
-        {
-            SpawnPrefab("InfoText");
-        }
-        [MenuItem("Tools/Amanita/创建/剧情流程图", false, 0)]
+        [MenuItem("Tools/MmFungus/Fungus 原生/创建流程图", false, 120)]
         static void CreateFlowchart()
         {
             GameObject go = SpawnPrefab("Flowchart");
@@ -37,12 +32,6 @@ namespace Fungus.EditorUtils
                 GameObject.DestroyImmediate(block._EventHandler);
                 block._EventHandler = null;
             }
-        }
-
-        [MenuItem("Tools/Amanita/创建/标志对象", false, 1000)]
-        static void CreateFungusLogo()
-        {
-            SpawnPrefab("FungusLogo");
         }
 
         public static GameObject SpawnPrefab(string prefabName)
