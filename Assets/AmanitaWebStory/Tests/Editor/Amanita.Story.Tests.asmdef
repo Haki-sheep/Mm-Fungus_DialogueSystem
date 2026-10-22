@@ -1,0 +1,6 @@
+{
+    "name": "Amanita.Story.Tests",
+    "references": ["Amanita.Story.Data", "Amanita.Story.Playback", "UniTask"],
+    "includePlatforms": ["Editor"],
+    "optionalUnityReferences": ["TestAssemblies"]
+}
