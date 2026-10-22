@@ -30,8 +30,7 @@ namespace Fungus.EditorUtils
                 Asset.StartsWith("Assets/AmanitaWebStory/Editor/") ||
                 Asset.StartsWith("Assets/AmanitaWebStory/Runtime/") ||
                 Asset.StartsWith("Assets/AmanitaWebStory/Web/") ||
-                Asset.StartsWith("Assets/AmanitaWebStory/Fonts/") ||
-                Asset == "Assets/AmanitaWebStory/StoryTemplate.prefab").ToArray();
+                Asset.StartsWith("Assets/AmanitaWebStory/Fonts/")).ToArray();
             AssetDatabase.ExportPackage(AssetList, Path, ExportPackageOptions.Default);
         }
     }

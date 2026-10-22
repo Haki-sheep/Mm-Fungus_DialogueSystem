@@ -1,0 +1,5 @@
+{
+    "name": "Amanita.Story.Views",
+    "rootNamespace": "AmanitaWebStory",
+    "references": ["Amanita.Story.Data", "Amanita.Story.Playback", "Fungus", "UniTask", "PrimeTween.Runtime", "Unity.TextMeshPro", "Unity.ugui"]
+}

@@ -1,3 +1,6 @@
+using System;
+using System.Reflection;
+using Fungus;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -31,8 +34,9 @@ namespace AmanitaWebStory.Editor
                 var Line = Label(Card.transform, "Line", "", Font, new Vector2(0.06f, 0.43f), new Vector2(0.80f, 0.74f), 27, ContentColor);
                 Line.alignment = TextAlignmentOptions.TopLeft;
                 Line.overflowMode = TextOverflowModes.Overflow;
-                var Portrait = Panel(Card.transform, "Portrait", new Vector2(0.82f, 0.49f), new Vector2(0.96f, 0.86f), Color.white);
-                Portrait.preserveAspect = true;
+                var Writer = Line.gameObject.AddComponent<Writer>();
+                var LeftSlot = Slot(Surface, "LeftPortrait", Radio ? new Vector2(0.05f, 0.07f) : new Vector2(0.05f, 0.57f), Radio ? new Vector2(0.30f, 0.77f) : new Vector2(0.30f, 0.98f));
+                var RightSlot = Slot(Surface, "RightPortrait", Radio ? new Vector2(0.27f, 0.07f) : new Vector2(0.70f, 0.57f), Radio ? new Vector2(0.52f, 0.77f) : new Vector2(0.95f, 0.98f));
                 var Continue = Button(Card.transform, "Continue", "继续  /  点击补全文字", Font,
                     new Vector2(0.44f, 0.06f), new Vector2(0.94f, 0.18f), Accent, Ink);
                 var ScrollRoot = Rect(Card.transform, "Options", new Vector2(0.06f, 0.06f), new Vector2(0.94f, 0.40f));
@@ -67,14 +71,15 @@ namespace AmanitaWebStory.Editor
                 Voice.playOnAwake = Sound.playOnAwake = false;
                 Set(View, "surface", Surface.gameObject);
                 Set(View, "speakerText", Speaker); Set(View, "lineText", Line);
-                Set(View, "portrait", Portrait); Set(View, "background", Backdrop);
+                Set(View, "writer", Writer); Set(View, "background", Backdrop);
+                Set(View, "portraitSlotList", new System.Collections.Generic.List<PortraitSlot> { LeftSlot, RightSlot });
                 Set(View, "continueButton", Continue); Set(View, "optionRoot", Options);
                 Set(View, "optionPanel", ScrollRoot.gameObject);
                 Set(View, "optionPrefab", Option); Set(View, "voiceSource", Voice); Set(View, "soundSource", Sound);
                 Surface.gameObject.SetActive(false);
                 return PrefabUtility.SaveAsPrefabAsset(Root, Path);
             }
-            finally { Object.DestroyImmediate(Root); }
+            finally { UnityEngine.Object.DestroyImmediate(Root); }
         }
 
         #endregion
@@ -131,7 +136,31 @@ namespace AmanitaWebStory.Editor
             return Button;
         }
 
-        public static void Set(object Target, string Field, object Value) { StoryTemplateBuilder.Set(Target, Field, Value); }
+        private static PortraitSlot Slot(Transform Parent, string Name, Vector2 Min, Vector2 Max)
+        {
+            var Image = Panel(Parent, Name, Min, Max, Color.white);
+            Image.preserveAspect = true;
+            Image.enabled = false;
+            var Slot = Image.gameObject.AddComponent<PortraitSlot>();
+            Set(Slot, "image", Image);
+            return Slot;
+        }
+
+        /// <summary>
+        /// 写入私有序列化字段 字段名错误时直接报错 避免示例静默缺引用
+        /// </summary>
+        public static void Set(object Target, string Field, object Value)
+        {
+            for (var Type = Target.GetType(); Type != null; Type = Type.BaseType)
+            {
+                var Info = Type.GetField(Field, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                if (Info == null)
+                    continue;
+                Info.SetValue(Target, Value);
+                return;
+            }
+            throw new MissingFieldException(Target.GetType().FullName, Field);
+        }
 
         #endregion
     }

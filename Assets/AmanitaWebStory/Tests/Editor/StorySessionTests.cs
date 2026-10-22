@@ -155,7 +155,7 @@ namespace AmanitaWebStory.Tests
                 new StoryAssignment("add", "check", "trust", eStoryAssignment.Add, StoryValue.Parse(eStoryDataType.Integer, "1")),
                 new StoryCondition("check", "trust", eStoryComparison.Equal, StoryValue.Parse(eStoryDataType.Integer, "1"), "signal", "declined_line"),
                 new StoryEvent("signal", "accepted_line", "accepted", StoryValue.Parse(eStoryDataType.None, "")),
-                new StoryLine("accepted_line", "end", "守卫", "请进 {$trust}"), new StoryLine("declined_line", "end", "守卫", "再见"), new StoryEnd("end"));
+                new StoryLine("accepted_line", "end", null, "请进 {$trust}"), new StoryLine("declined_line", "end", null, "再见"), new StoryEnd("end"));
         }
 
         private StoryAsset AssetWith(params StoryStep[] StepList)

@@ -15,10 +15,10 @@ namespace AmanitaWebStory.Editor
 {
     public static class StorySeparationSampleBuilder
     {
-        public const string Root = StoryTemplateBuilder.Root + "/Samples/Separation";
+        public const string Root = StoryAssetExporter.Root + "/Samples/Separation";
         public const string ScenePath = Root + "/StorySeparation.unity";
 
-        [MenuItem("Tools/Fungus/数据表现分离/打开试用示例")]
+        [MenuItem("Tools/MmFungus/打开分离试用示例", false, 20)]
         private static async void Open()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
@@ -47,6 +47,7 @@ namespace AmanitaWebStory.Editor
                 await UniTask.WaitUntil(() => Resources.Load<TMP_Settings>("TMP Settings") != null).Timeout(TimeSpan.FromMinutes(1));
             }
             var Font = CreateFont();
+            CreateActor();
             var Story = StoryAssetExporter.Export(File.ReadAllText(Root + "/GateStory.json"), Root + "/GateStory.asset");
             var Dialogue = DialogueSampleUi.CreateView(Root + "/DialogueView.prefab", Font, false);
             var Radio = DialogueSampleUi.CreateView(Root + "/RadioView.prefab", Font, true);
@@ -99,13 +100,26 @@ namespace AmanitaWebStory.Editor
             return ScenePath;
         }
 
+        private static void CreateActor()
+        {
+            string Path = Root + "/GuardActor.asset";
+            if (AssetDatabase.LoadAssetAtPath<StoryActor>(Path) != null)
+                return;
+            var Actor = ScriptableObject.CreateInstance<StoryActor>();
+            DialogueSampleUi.Set(Actor, "actorId", "speaker");
+            DialogueSampleUi.Set(Actor, "displayName", "守卫");
+            DialogueSampleUi.Set(Actor, "nameColor", new Color(0.28f, 0.76f, 0.65f));
+            AssetDatabase.CreateAsset(Actor, Path);
+            AssetDatabase.SaveAssets();
+        }
+
         private static TMP_FontAsset CreateFont()
         {
             string Path = Root + "/DialogueFont.asset";
             var Existing = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(Path);
             if (Existing != null)
                 return Existing;
-            var Source = AssetDatabase.LoadAssetAtPath<Font>(StoryTemplateBuilder.Root + "/Fonts/MmDialogueSC.ttf");
+            var Source = AssetDatabase.LoadAssetAtPath<Font>(StoryAssetExporter.Root + "/Fonts/MmDialogueSC.ttf");
             var Font = TMP_FontAsset.CreateFontAsset(Source);
             Font.name = "DialogueFont";
             AssetDatabase.CreateAsset(Font, Path);
