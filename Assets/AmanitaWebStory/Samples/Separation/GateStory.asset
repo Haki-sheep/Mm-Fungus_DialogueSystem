@@ -15,33 +15,34 @@ MonoBehaviour:
   storyId: gate_sample
   title: "\u57CE\u95E8\u901A\u884C"
   entry: welcome
-  sourceJson: "{\n  \"version\": 1,\n  \"id\": \"gate_sample\",\n  \"title\": \"\u57CE\u95E8\u901A\u884C\",\n 
-    \"entry\": \"welcome\",\n  \"variables\": [{ \"key\": \"trust\", \"title\": \"\u5B88\u536B\u4FE1\u4EFB\",
-    \"type\": \"Integer\", \"value\": \"0\" }],\n  \"nodes\": [\n    { \"id\": \"welcome\",
-    \"title\": \"\u5B88\u536B\u95EE\u8BDD\", \"type\": \"say\", \"x\": 0, \"y\":
-    0, \"text\": \"\u57CE\u95E8\u5C31\u8981\u5173\u95ED\u4E86\u3002\u4F60\u6765\u8FD9\u91CC\u6709\u4EC0\u4E48\u4E8B\uFF1F\",
-    \"actor\": \"speaker\", \"next\": \"answer\" },\n    { \"id\": \"answer\", \"title\":
-    \"\u73A9\u5BB6\u9009\u62E9\", \"type\": \"choice\", \"x\": 280, \"y\": 0, \"options\":
-    [ { \"text\": \"\u6211\u662F\u6765\u9001\u4FE1\u7684\u3002\", \"target\": \"trust_guard\"
-    }, { \"text\": \"\u53EA\u662F\u8DEF\u8FC7\uFF0C\u660E\u5929\u518D\u6765\u5427\u3002\",
-    \"target\": \"check\" } ] },\n    { \"id\": \"trust_guard\", \"title\": \"\u589E\u52A0\u4FE1\u4EFB\",
+  sourceJson: "{\r\n  \"version\": 1,\r\n  \"id\": \"gate_sample\",\r\n  \"title\":
+    \"\u57CE\u95E8\u901A\u884C\",\r\n  \"entry\": \"welcome\",\r\n  \"variables\":
+    [{ \"key\": \"trust\", \"title\": \"\u5B88\u536B\u4FE1\u4EFB\", \"type\": \"Integer\",
+    \"value\": \"0\" }],\r\n  \"nodes\": [\r\n    { \"id\": \"welcome\", \"title\":
+    \"\u5B88\u536B\u95EE\u8BDD\", \"type\": \"say\", \"x\": 0, \"y\": 0, \"text\":
+    \"\u57CE\u95E8\u5C31\u8981\u5173\u95ED\u4E86\u3002\u4F60\u6765\u8FD9\u91CC\u6709\u4EC0\u4E48\u4E8B\uFF1F\",
+    \"actor\": \"speaker\", \"next\": \"answer\" },\r\n    { \"id\": \"answer\",
+    \"title\": \"\u73A9\u5BB6\u9009\u62E9\", \"type\": \"choice\", \"x\": 280, \"y\":
+    0, \"options\": [ { \"text\": \"\u6211\u662F\u6765\u9001\u4FE1\u7684\u3002\",
+    \"target\": \"trust_guard\" }, { \"text\": \"\u53EA\u662F\u8DEF\u8FC7\uFF0C\u660E\u5929\u518D\u6765\u5427\u3002\",
+    \"target\": \"check\" } ] },\r\n    { \"id\": \"trust_guard\", \"title\": \"\u589E\u52A0\u4FE1\u4EFB\",
     \"type\": \"set\", \"x\": 560, \"y\": 0, \"variable\": \"trust\", \"operation\":
-    \"add\", \"value\": \"1\", \"next\": \"check\" },\n    { \"id\": \"check\", \"title\":
-    \"\u5224\u65AD\u4FE1\u4EFB\", \"type\": \"condition\", \"x\": 840, \"y\": 0,
-    \"variable\": \"trust\", \"comparison\": \"gte\", \"value\": \"1\", \"onTrue\":
-    \"permit\", \"onFalse\": \"leave\" },\n    { \"id\": \"permit\", \"title\": \"\u5141\u8BB8\u901A\u884C\",
-    \"type\": \"event\", \"x\": 1120, \"y\": 0, \"eventMode\": \"signal\", \"eventId\":
-    \"gate_opened\", \"eventTitle\": \"\u5141\u8BB8\u901A\u884C\", \"eventValueKind\":
-    \"Integer\", \"value\": \"1\", \"next\": \"pause\" },\n    { \"id\": \"pause\",
-    \"title\": \"\u5F00\u95E8\u7B49\u5F85\", \"type\": \"wait\", \"x\": 1400, \"y\":
-    0, \"seconds\": 0.2, \"next\": \"enter\" },\n    { \"id\": \"enter\", \"title\":
-    \"\u6B22\u8FCE\u5165\u57CE\", \"type\": \"say\", \"x\": 1680, \"y\": 0, \"text\":
-    \"\u539F\u6765\u662F\u4FE1\u4F7F\u3002\u8BF7\u8FDB\uFF0C\u65C5\u5E97\u5C31\u5728\u57CE\u95E8\u53F3\u4FA7\u3002\\n\u5F53\u524D\u4FE1\u4EFB\uFF1A{$trust}\",
-    \"actor\": \"speaker\", \"next\": \"end\" },\n    { \"id\": \"leave\", \"title\":
+    \"add\", \"value\": \"1\", \"next\": \"check\" },\r\n    { \"id\": \"check\",
+    \"title\": \"\u5224\u65AD\u4FE1\u4EFB\", \"type\": \"condition\", \"x\": 840,
+    \"y\": 0, \"variable\": \"trust\", \"comparison\": \"gte\", \"value\": \"1\",
+    \"onTrue\": \"permit\", \"onFalse\": \"leave\" },\r\n    { \"id\": \"permit\",
+    \"title\": \"\u5141\u8BB8\u901A\u884C\", \"type\": \"event\", \"x\": 1120, \"y\":
+    0, \"eventMode\": \"signal\", \"eventId\": \"gate_opened\", \"eventTitle\": \"\u5141\u8BB8\u901A\u884C\",
+    \"eventValueKind\": \"Integer\", \"value\": \"1\", \"next\": \"pause\" },\r\n   
+    { \"id\": \"pause\", \"title\": \"\u5F00\u95E8\u7B49\u5F85\", \"type\": \"wait\",
+    \"x\": 1400, \"y\": 0, \"seconds\": 0.2, \"next\": \"enter\" },\r\n    { \"id\":
+    \"enter\", \"title\": \"\u6B22\u8FCE\u5165\u57CE\", \"type\": \"say\", \"x\":
+    1680, \"y\": 0, \"text\": \"\u539F\u6765\u662F\u4FE1\u4F7F\u3002\u8BF7\u8FDB\uFF0C\u65C5\u5E97\u5C31\u5728\u57CE\u95E8\u53F3\u4FA7\u3002\\n\u5F53\u524D\u4FE1\u4EFB\uFF1A{$trust}\",
+    \"actor\": \"speaker\", \"next\": \"end\" },\r\n    { \"id\": \"leave\", \"title\":
     \"\u660E\u65E5\u518D\u6765\", \"type\": \"say\", \"x\": 1120, \"y\": 260, \"text\":
     \"\u597D\uFF0C\u8DEF\u4E0A\u5C0F\u5FC3\u3002\u660E\u5929\u65E9\u4E0A\u518D\u6765\u5427\u3002\",
-    \"actor\": \"speaker\", \"next\": \"end\" },\n    { \"id\": \"end\", \"title\":
-    \"\u7ED3\u675F\", \"type\": \"end\", \"x\": 1960, \"y\": 0 }\n  ]\n}\n"
+    \"actor\": \"speaker\", \"next\": \"end\" },\r\n    { \"id\": \"end\", \"title\":
+    \"\u7ED3\u675F\", \"type\": \"end\", \"x\": 1960, \"y\": 0 }\r\n  ]\r\n}\r\n"
   background: {fileID: 0}
   variableList:
   - <Key>k__BackingField: trust
@@ -52,28 +53,28 @@ MonoBehaviour:
       boolean: 0
       text: 
   stepList:
-  - rid: 3173424156509208665
-  - rid: 3173424156509208666
-  - rid: 3173424156509208667
-  - rid: 3173424156509208668
-  - rid: 3173424156509208669
-  - rid: 3173424156509208670
-  - rid: 3173424156509208671
-  - rid: 3173424156509208672
-  - rid: 3173424156509208673
+  - rid: 3158282787829055488
+  - rid: 3158282787829055489
+  - rid: 3158282787829055490
+  - rid: 3158282787829055491
+  - rid: 3158282787829055492
+  - rid: 3158282787829055493
+  - rid: 3158282787829055494
+  - rid: 3158282787829055495
+  - rid: 3158282787829055496
   references:
     version: 2
     RefIds:
-    - rid: 3173424156509208665
+    - rid: 3158282787829055488
       type: {class: StoryLine, ns: AmanitaWebStory, asm: Amanita.Story.Data}
       data:
         <Id>k__BackingField: welcome
         <Next>k__BackingField: answer
-        <Speaker>k__BackingField: "\u89D2\u8272"
+        <Actor>k__BackingField: {fileID: 11400000, guid: aa09daa8668593c458aa2f94b3460cf7, type: 2}
         <Text>k__BackingField: "\u57CE\u95E8\u5C31\u8981\u5173\u95ED\u4E86\u3002\u4F60\u6765\u8FD9\u91CC\u6709\u4EC0\u4E48\u4E8B\uFF1F"
         <Portrait>k__BackingField: {fileID: 0}
         <Voice>k__BackingField: {fileID: 0}
-    - rid: 3173424156509208666
+    - rid: 3158282787829055489
       type: {class: StoryChoice, ns: AmanitaWebStory, asm: Amanita.Story.Data}
       data:
         <Id>k__BackingField: answer
@@ -83,7 +84,7 @@ MonoBehaviour:
           <Target>k__BackingField: trust_guard
         - <Text>k__BackingField: "\u53EA\u662F\u8DEF\u8FC7\uFF0C\u660E\u5929\u518D\u6765\u5427\u3002"
           <Target>k__BackingField: check
-    - rid: 3173424156509208667
+    - rid: 3158282787829055490
       type: {class: StoryAssignment, ns: AmanitaWebStory, asm: Amanita.Story.Data}
       data:
         <Id>k__BackingField: trust_guard
@@ -96,7 +97,7 @@ MonoBehaviour:
           number: 0
           boolean: 0
           text: 
-    - rid: 3173424156509208668
+    - rid: 3158282787829055491
       type: {class: StoryCondition, ns: AmanitaWebStory, asm: Amanita.Story.Data}
       data:
         <Id>k__BackingField: check
@@ -111,7 +112,7 @@ MonoBehaviour:
           text: 
         <OnTrue>k__BackingField: permit
         <OnFalse>k__BackingField: leave
-    - rid: 3173424156509208669
+    - rid: 3158282787829055492
       type: {class: StoryEvent, ns: AmanitaWebStory, asm: Amanita.Story.Data}
       data:
         <Id>k__BackingField: permit
@@ -123,31 +124,31 @@ MonoBehaviour:
           number: 0
           boolean: 0
           text: 
-    - rid: 3173424156509208670
+    - rid: 3158282787829055493
       type: {class: StoryWait, ns: AmanitaWebStory, asm: Amanita.Story.Data}
       data:
         <Id>k__BackingField: pause
         <Next>k__BackingField: enter
         <Seconds>k__BackingField: 0.2
-    - rid: 3173424156509208671
+    - rid: 3158282787829055494
       type: {class: StoryLine, ns: AmanitaWebStory, asm: Amanita.Story.Data}
       data:
         <Id>k__BackingField: enter
         <Next>k__BackingField: end
-        <Speaker>k__BackingField: "\u89D2\u8272"
+        <Actor>k__BackingField: {fileID: 11400000, guid: aa09daa8668593c458aa2f94b3460cf7, type: 2}
         <Text>k__BackingField: "\u539F\u6765\u662F\u4FE1\u4F7F\u3002\u8BF7\u8FDB\uFF0C\u65C5\u5E97\u5C31\u5728\u57CE\u95E8\u53F3\u4FA7\u3002\n\u5F53\u524D\u4FE1\u4EFB\uFF1A{$trust}"
         <Portrait>k__BackingField: {fileID: 0}
         <Voice>k__BackingField: {fileID: 0}
-    - rid: 3173424156509208672
+    - rid: 3158282787829055495
       type: {class: StoryLine, ns: AmanitaWebStory, asm: Amanita.Story.Data}
       data:
         <Id>k__BackingField: leave
         <Next>k__BackingField: end
-        <Speaker>k__BackingField: "\u89D2\u8272"
+        <Actor>k__BackingField: {fileID: 11400000, guid: aa09daa8668593c458aa2f94b3460cf7, type: 2}
         <Text>k__BackingField: "\u597D\uFF0C\u8DEF\u4E0A\u5C0F\u5FC3\u3002\u660E\u5929\u65E9\u4E0A\u518D\u6765\u5427\u3002"
         <Portrait>k__BackingField: {fileID: 0}
         <Voice>k__BackingField: {fileID: 0}
-    - rid: 3173424156509208673
+    - rid: 3158282787829055496
       type: {class: StoryEnd, ns: AmanitaWebStory, asm: Amanita.Story.Data}
       data:
         <Id>k__BackingField: end
